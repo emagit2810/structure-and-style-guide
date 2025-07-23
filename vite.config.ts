@@ -19,5 +19,10 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: '/gitTres/dist/',
+  // Para los assets (CSS, JS, imágenes)
+  base: mode === 'production' ? '/gitTres/dist/' : '/',
+  // Variables de entorno personalizadas
+  define: {
+    __APP_BASENAME__: mode === 'production' ? '"/app-react"' : '"/"'
+  }
 }));

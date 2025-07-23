@@ -1,17 +1,45 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Award, Clock, Shield } from 'lucide-react';
+
+// --- IMÁGENES DEL CARRUSEL ---
 import heroImage from '@/assets/hero-technician.jpg';
+import agronicaImage from '@/assets/agronica1.jpg';
+import mecanizadosImage from '@/assets/mecanizat1.jpeg'; 
+import automatizacionImage from '@/assets/automat1.png'; 
+
+const carouselItems = [
+  { text: "Equipos Médicos", colorClass: "text-secondary", image: heroImage },
+  { text: "Ágronica", colorClass: "text-green-600", image: agronicaImage },
+  { text: "Mecanizados", colorClass: "text-amber-700", image: mecanizadosImage }, // Usando un tono ámbar para "marrón"
+  { text: "Automatización", colorClass: "text-yellow-500", image: automatizacionImage }
+];
 
 const HeroSection = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex(prevIndex => (prevIndex + 1) % carouselItems.length);
+    }, 3000); // Cambia el texto cada 3 segundos
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section className="relative min-h-[80vh] bg-gradient-to-br from-primary-light to-secondary-light overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <img
-          src={heroImage}
-          alt="Professional medical equipment technician"
-          className="w-full h-full object-cover opacity-20"
-        />
+        {carouselItems.map((item, index) => (
+          <img
+            key={index}
+            src={item.image}
+            alt={`Fondo para ${item.text}`}
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
+            style={{
+              opacity: index === currentIndex ? 1 : 0, // Opacidad aumentada para mayor visibilidad
+            }}
+          />
+        ))}
         <div className="absolute inset-0 bg-gradient-to-r from-primary-light/80 to-secondary-light/60"></div>
       </div>
 
@@ -21,7 +49,20 @@ const HeroSection = () => {
           {/* Main Heading */}
           <h1 className="text-5xl md:text-6xl font-bold text-primary mb-6 leading-tight">
             Servicios Profesionales de
-            <span className="text-secondary block">Equipos Médicos</span>
+            {/* Contenedor del carrusel de texto */}
+            <span className="block h-[1.2em] relative overflow-hidden">
+              {carouselItems.map((item, index) => (
+                <span
+                  key={index}
+                  className={`absolute w-full h-full left-0 transition-transform duration-700 ease-in-out ${item.colorClass}`}
+                  style={{
+                    transform: `translateY(${(index - currentIndex) * 100}%)`,
+                  }}
+                >
+                  {item.text}
+                </span>
+              ))}
+            </span>
           </h1>
 
           {/* Subheading */}
@@ -36,7 +77,7 @@ const HeroSection = () => {
               Solicitar Cotización
               <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-4 bg-white/90 hover:bg-white">
+            <Button variant="outline" size="lg" className="text-lg px-8 py-4 bg-white/90 hover:bg-secondary   ">
               Conocer Servicios
             </Button>
           </div>
