@@ -64,6 +64,10 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/1bc2a5b4-4003-4324-9736-64f5cf1048f9) and click on Share -> Publish.
 
+### Configure the base URL
+
+The application detects the correct URL automatically. During development it uses `window.location.origin`. When building for production the URL defaults to `https://www.bvslab.com/`. You can override this by setting the `VITE_SITE_URL` environment variable.
+
 ## Can I connect a custom domain to my Lovable project?
 
 Yes, you can!
