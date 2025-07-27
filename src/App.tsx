@@ -6,12 +6,15 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Biomedica from "./pages/Biomedica";
+import { getSiteUrl } from "./lib/siteUrl";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  // basename condicional basado en el entorno
-  const basename = import.meta.env.PROD ? '/app-react' : '/';
+  // La aplicación siempre vive en la raíz. El dominio varía según el entorno.
+  const basename = "/";
+  const siteUrl = getSiteUrl();
+  console.log("Base URL:", siteUrl);
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
