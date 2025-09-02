@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Stethoscope, Settings, Wrench, Clock, Award, Heart, Microscope, MonitorSpeaker, Zap } from "lucide-react";
-import biomedHero1 from "@/assets/biomedHero1.png";
+import biomedHero1 from "@/assets/heroBiomedica.jpg";
 
 const diagnosticCards = [
   { icon: Stethoscope, title: 'Diagnóstico', desc: 'Equipos de precisión', delay: 'delay-100', extraTitle: 'MÁS DETALLE', extraDesc: 'Análisis y calibración de equipos de diagnóstico por imagen.' },
@@ -52,7 +52,7 @@ const Biomedica = () => {
           <img
             src={biomedHero1}    
             alt="Hero de Ingeniería Biomédica"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-black/60"></div>
         </div>

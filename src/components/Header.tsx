@@ -151,13 +151,15 @@ const Header = () => {
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseLeave}
                     >
-                        <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-                            <img src={logoImg} alt="bvs lab logo" className="w-10 h-10" />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="font-bold text-lg text-foreground">BVS LAB</span>
-                            <span className="text-xs text-muted-foreground">ingenieria para todos</span>
-                        </div>
+                        <a href="/" className="flex items-center gap-3 no-underline">
+                            <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
+                                <img src={logoImg} alt="bvs lab logo" className="w-10 h-10" />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="font-bold text-lg text-foreground">BVS LAB</span>
+                                <span className="text-xs text-muted-foreground">ingenieria para todos</span>
+                            </div>
+                        </a>
                     </div>
 
                     {/* ZONA EXCLUIDA: NAVEGACIÓN */}
@@ -168,8 +170,8 @@ const Header = () => {
                                     key={item.label}
                                     label={item.label}
                                     items={[
-                                        { label: 'Agrónica', href: '#agronica' },
-                                        { label: 'Automatización', href: '#automatizacion' },
+                                        { label: 'Agrónica', href: '/agro' },
+                                        { label: 'Automatización', href: '/auto' },
                                         { label: 'Biomédica', href: '/bio' },
                                         { label: 'Mecanizado', href: '#mecanizado' },
                                     ]}
@@ -188,13 +190,21 @@ const Header = () => {
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseLeave}
                     >
+                        <a href="https://wa.me/573134627810" target="_blank" rel="noreferrer">
                         <Button variant="outline" size="sm" className=" bg-white/90 hover:bg-secondary "  >
                             <Phone className="w-4 h-4 mr-2" />
                             Contacto
-                        </Button>
-                        <Button variant="cta" size="sm">
-                            Solicitar Cotización
-                        </Button>
+                        </Button> 
+                        </a>
+                        <a 
+                            href="https://wa.me/573134627810"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <Button variant="cta" size="sm">
+                                Solicitar Cotización
+                            </Button>
+                        </a>
                     </div>
 
                     {/* Menú Móvil (sin cambios) */}

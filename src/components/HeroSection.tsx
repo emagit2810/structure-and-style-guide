@@ -4,9 +4,10 @@ import { ArrowRight, Award, Clock, Shield } from 'lucide-react';
 
 // --- IMÁGENES DEL CARRUSEL ---
 import heroImage from '@/assets/hero-technician.jpg';
-import agronicaImage from '@/assets/agronica1.jpg';
-import mecanizadosImage from '@/assets/mecanizat1.jpeg'; 
-import automatizacionImage from '@/assets/automat1.png'; 
+import agronicaImage from '@/assets/agronamica-redim.jpg';    
+import mecanizadosImage from '@/assets/automatica_redim.jpg'; 
+import automatizacionImage from '@/assets/mecanizado-redim.jpg'; 
+import whatsappLogo from '@/assets/logoWhatsappTra.png';
 
 const carouselItems = [
   { text: "Equipos Médicos", colorClass: "text-secondary", image: heroImage },
@@ -36,11 +37,16 @@ const HeroSection = () => {
             alt={`Fondo para ${item.text}`}
             className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
             style={{
-              opacity: index === currentIndex ? 1 : 0, // Opacidad aumentada para mayor visibilidad
+              opacity: index === currentIndex ? 1 : 0, // 1 = totalmente visible
             }}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-light/80 to-secondary-light/60"></div>
+
+        {/* Capa sutil que no blanquea ni apaga tanto la imagen */}
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-primary-light/70 to-secondary-light/10 pointer-events-none"
+          aria-hidden="true"
+        />
       </div>
 
       {/* Content */}
@@ -110,10 +116,16 @@ const HeroSection = () => {
       </div>
 
       {/* Floating Elements */}
-      <div className="absolute bottom-8 right-8 hidden lg:block">
-        <div className="bg-white rounded-full p-4 shadow-lg animate-pulse">
-          <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full"></div>
-        </div>
+      <div className="fixed bottom-8 right-8 hidden lg:block z-50">
+        <a
+          href="https://wa.me/573134627810"
+          target="_blank"
+          rel="noreferrer"
+          className="block w-12 h-12 rounded-full overflow-hidden shadow-lg transition-transform duration-200 transform hover:scale-110"
+          aria-label="Contactar por Whatsapp"
+        >
+          <img src={whatsappLogo} alt="Whatsapp" className="w-full h-full object-cover object-center" />
+        </a>
       </div>
     </section>
   );

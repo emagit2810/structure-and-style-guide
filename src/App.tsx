@@ -6,7 +6,12 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Biomedica from "./pages/Biomedica";
+<<<<<<< HEAD
 import { getSiteUrl } from "./lib/siteUrl";
+=======
+import Agronica from "./pages/Agronica";
+import Automatica from "./pages/Automatica";
+>>>>>>> 4a60151 (feat: cambios en header, hero, services y páginas (WIP))
 
 const queryClient = new QueryClient();
 
@@ -24,6 +29,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/bio" element={<Biomedica />} />
+            <Route path="/agro" element={<Agronica />} />
+            <Route path="/auto" element={<Automatica />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

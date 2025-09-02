@@ -81,8 +81,8 @@ const ServicesSection = () => {
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {services.map((service, index) => (
-            <Card key={index} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-card">
+          {services.map((service, idx) => (
+            <Card key={idx} className="group">
               <CardContent className="p-6">
                 {/* Imagen cuadrada en lugar de icono circular */}
                 <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300 p-2`}>
@@ -109,27 +109,35 @@ const ServicesSection = () => {
                   ))}
                 </ul>
 
-                {/* CTA Link */}
-                {service.title === "Ingeniería Biomédica" ? (
-                  <Button
-                    asChild
-                    variant="ghost"
-                    className="w-full justify-between group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300"
-                  >
+                {/* CTA Link: usar `Link` para navegar a las rutas definidas en App.tsx */}
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="w-full justify-between group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300"
+                >
+                  {/* Seleccionar la ruta según el título del servicio */}
+                  {service.title === "Ingeniería Biomédica" ? (
                     <Link to="/bio">
                       Ver Detalles
                       <ArrowRight className="w-4 h-4" />
                     </Link>
-                  </Button>
-                ) : (
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-between group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300"
-                  >
-                    Ver Detalles
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                )}
+                  ) : service.title.includes("Agrónica") || service.title.includes("Agrónica") || service.title === "Agrónica y Agricultura de Precisión" || service.title === "Agrónica" ? (
+                    <Link to="/agro">
+                      Ver Detalles
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  ) : service.title.includes("Automatización") || service.title === "Automatización Industrial" || service.title === "Automatización" ? (
+                    <Link to="/auto">
+                      Ver Detalles
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  ) : (
+                    <Link to="#">
+                      Ver Detalles
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  )}
+                </Button>
               </CardContent>
             </Card>
           ))}
