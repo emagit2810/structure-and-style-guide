@@ -6,12 +6,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Biomedica from "./pages/Biomedica";
-<<<<<<< HEAD
 import { getSiteUrl } from "./lib/siteUrl";
-=======
 import Agronica from "./pages/Agronica";
 import Automatica from "./pages/Automatica";
->>>>>>> 4a60151 (feat: cambios en header, hero, services y páginas (WIP))
 
 const queryClient = new QueryClient();
 
