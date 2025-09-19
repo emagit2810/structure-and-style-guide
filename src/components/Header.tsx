@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Phone, Mail, MapPin } from 'lucide-react';
 import logoImg from '@/assets/Nuevo Enzo.png';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -101,23 +102,44 @@ const Header = () => {
                         <ul className="flex flex-row w-full max-w-6xl mx-auto divide-x divide-border">
                             {items.map((item) => (
                                 <li key={item.label} className="flex-1 min-w-0 group">
-                                    <a
-                                        href={item.href}
-                                        className="block px-8 py-6 text-foreground h-full relative overflow-hidden transition-colors duration-200"
-                                        onClick={() => setOpen(false)}
-                                    >
-                                        <span
-                                            className="absolute inset-0 left-0 w-0 group-hover:w-full h-full transition-all duration-300 bg-blue-100"
-                                            style={{ zIndex: -1 }}
-                                        ></span>
-                                        <span className="relative z-10 block font-semibold text-lg mb-2">{item.label}</span>
-                                        <span className="relative z-10 block text-sm text-muted-foreground leading-snug">
-                                            {item.label === 'Agrónica' && 'Soluciones innovadoras para la agricultura moderna y sostenible.'}
-                                            {item.label === 'Automatización' && 'Implementación de sistemas automáticos para optimizar procesos industriales.'}
-                                            {item.label === 'Biomédica' && 'Tecnología avanzada para el sector salud y equipos médicos.'}
-                                            {item.label === 'Mecanizado' && 'Servicios de manufactura y mecanizado de alta precisión.'}
-                                        </span>
-                                    </a>
+                                    {item.href.startsWith('/') ? (
+                                        <Link
+                                            to={item.href}
+                                            className="block px-8 py-6 text-foreground h-full relative overflow-hidden transition-colors duration-200"
+                                            onClick={() => setOpen(false)}
+                                        >
+                                            <span
+                                                className="absolute inset-0 left-0 w-0 group-hover:w-full h-full transition-all duration-300 bg-blue-100"
+                                                style={{ zIndex: -1 }}
+                                            ></span>
+                                            <span className="relative z-10 block font-semibold text-lg mb-2">{item.label}</span>
+                                            <span className="relative z-10 block text-sm text-muted-foreground leading-snug">
+                                                {item.label === 'Agrónica' && 'Soluciones innovadoras para la agricultura moderna y sostenible.'}
+                                                {item.label === 'Automatización' && 'Implementación de sistemas automáticos para optimizar procesos industriales.'}
+                                                {item.label === 'Biomédica' && 'Tecnología avanzada para el sector salud y equipos médicos.'}
+                                                {item.label === 'Mecanizado' && 'Servicios de manufactura y mecanizado de alta precisión.'}
+                                                {item.label === 'equipos ' &&'tienda de productos.'}
+                                            </span>
+                                        </Link>
+                                    ) : (
+                                        <a
+                                            href={item.href}
+                                            className="block px-8 py-6 text-foreground h-full relative overflow-hidden transition-colors duration-200"
+                                            onClick={() => setOpen(false)}
+                                        >
+                                            <span
+                                                className="absolute inset-0 left-0 w-0 group-hover:w-full h-full transition-all duration-300 bg-blue-100"
+                                                style={{ zIndex: -1 }}
+                                            ></span>
+                                            <span className="relative z-10 block font-semibold text-lg mb-2">{item.label}</span>
+                                            <span className="relative z-10 block text-sm text-muted-foreground leading-snug">
+                                                {item.label === 'Agrónica' && 'Soluciones innovadoras para la agricultura moderna y sostenible.'}
+                                                {item.label === 'Automatización' && 'Implementación de sistemas automáticos para optimizar procesos industriales.'}
+                                                {item.label === 'Biomédica' && 'Tecnología avanzada para el sector salud y equipos médicos.'}
+                                                {item.label === 'Mecanizado' && 'Servicios de manufactura y mecanizado de alta precisión.'}
+                                            </span>
+                                        </a>
+                                    )}
                                 </li>
                             ))}
                         </ul>
@@ -130,7 +152,7 @@ const Header = () => {
     const navItems = [
         { label: 'Consulta', href: '#consultation' },
         { label: 'Servicios', href: '#services' },
-        { label: 'Equipos', href: '#equipment' },
+        { label: 'Equipos', href: '/equipos' },
         { label: 'Nosotros', href: '#about' },
         { label: 'Blog', href: '#blog' },
     ];
@@ -151,7 +173,7 @@ const Header = () => {
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseLeave}
                     >
-                        <a href="/" className="flex items-center gap-3 no-underline">
+                        <Link to="/" className="flex items-center gap-3 no-underline">
                             <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
                                 <img src={logoImg} alt="bvs lab logo" className="w-10 h-10" />
                             </div>
@@ -159,7 +181,7 @@ const Header = () => {
                                 <span className="font-bold text-lg text-foreground">BVS LAB</span>
                                 <span className="text-xs text-muted-foreground">ingenieria para todos</span>
                             </div>
-                        </a>
+                        </Link>
                     </div>
 
                     {/* ZONA EXCLUIDA: NAVEGACIÓN */}
@@ -174,8 +196,13 @@ const Header = () => {
                                         { label: 'Automatización', href: '/auto' },
                                         { label: 'Biomédica', href: '/bio' },
                                         { label: 'Mecanizado', href: '#mecanizado' },
+                                        { label: 'Equipos', href: '/equipos' },
                                     ]}
                                 />
+                            ) : item.href.startsWith('/') ? (
+                                <Link key={item.label} to={item.href} className="text-foreground hover:text-primary transition-colors duration-300 font-medium">
+                                    {item.label}
+                                </Link>
                             ) : (
                                 <a key={item.label} href={item.href} className="text-foreground hover:text-primary transition-colors duration-300 font-medium">
                                     {item.label}

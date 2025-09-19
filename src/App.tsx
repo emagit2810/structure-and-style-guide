@@ -9,6 +9,7 @@ import Biomedica from "./pages/Biomedica";
 import { getSiteUrl } from "./lib/siteUrl";
 import Agronica from "./pages/Agronica";
 import Automatica from "./pages/Automatica";
+import Equipos from "./pages/equipos";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => {
             <Route path="/bio" element={<Biomedica />} />
             <Route path="/agro" element={<Agronica />} />
             <Route path="/auto" element={<Automatica />} />
+            <Route path="/equipos" element={<Equipos />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
