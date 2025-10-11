@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Leaf, Tractor, Settings, Wrench, Clock, Award, ShieldCheck, Sprout, Combine, Factory, Microscope, Briefcase, Bot } from "lucide-react";
+import Header from "@/components/Header";
 
 // Ruta corregida para el logo
 import AgronicaLogo from '../assets/Nuevo Enzo.png';
@@ -65,20 +66,7 @@ const Agronica = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* HEADER */}
-      <header className="bg-white backdrop-blur-sm sticky top-0 z-50 border-b border-green-200 shadow-sm">
-        <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
-          <a href="#" className="flex items-center gap-3">
-            <img src={AgronicaLogo} alt="Logo Agrónica Lab" className="h-10 w-10" />
-            <span className="text-xl font-bold text-green-800">Agrónica Lab</span>
-          </a>
-          <div className="hidden md:flex space-x-6 items-center">
-            <a href="#agronica" className="text-green-700 hover:text-green-500 transition-colors">¿Qué es la Agrónica?</a>
-            <a href="#mantenimiento" className="text-green-700 hover:text-green-500 transition-colors">Mantenimiento</a>
-            <a href="#servicios" className="text-green-700 hover:text-green-500 transition-colors">Servicios</a>
-            <Button className="bg-green-600 hover:bg-green-700 text-white">Contacto</Button>
-          </div>
-        </nav>
-      </header>
+      <Header />
 
       <main>
         {/* HERO SECTION */}

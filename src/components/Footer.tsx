@@ -9,11 +9,11 @@ const Footer = () => {
           <div className="md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                <span className="text-primary font-bold text-xl">TM</span>
+                <span className="text-primary font-bold text-xl">BVS</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg">TechMedical</span>
-                <span className="text-xs opacity-80">SOLUTIONS</span>
+                <span className="font-bold text-lg">bvs lab</span>
+                <span className="text-xs opacity-80">Soluciones</span>
               </div>
             </div>
             <p className="text-primary-foreground/80 mb-4 max-w-md">
@@ -47,11 +47,11 @@ const Footer = () => {
             <div className="space-y-3 text-primary-foreground/80">
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4" />
-                <span>+57 (1) 234-5678</span>
+                <span>+57 313 462 7810</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4" />
-                <span>contacto@techmedical.com</span>
+                <span>bvslab</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="w-4 h-4" />
@@ -62,7 +62,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center text-primary-foreground/60">
-          <p>&copy; 2024 TechMedical Solutions. Todos los derechos reservados.</p>
+          <p>&copy; 2024 BVS LAB. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>

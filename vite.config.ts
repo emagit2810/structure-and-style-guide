@@ -5,7 +5,6 @@ import { componentTagger } from "lovable-tagger";
 
 const SITE_URL = process.env.VITE_SITE_URL || "https://www.bvslab.com/";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
@@ -13,19 +12,16 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
+    mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // Para los assets (CSS, JS, imágenes)
-  base: '/',
-  // Variables de entorno personalizadas
+  base: mode === 'production' ? '/react-build/' : '/',
   define: {
-    __APP_BASENAME__: '"/"',
+    __APP_BASENAME__: mode === 'production' ? '"/react-build/"' : '"/"',
     __SITE_URL__: mode === 'production' ? `"${SITE_URL}"` : '""'
   }
 }));

@@ -9,8 +9,8 @@ import Biomedica from "./pages/Biomedica";
 import { getSiteUrl } from "./lib/siteUrl";
 import Agronica from "./pages/Agronica";
 import Automatica from "./pages/Automatica";
-import Equipos from "./pages/equipos";
-
+import Equipos from "./pages/Equipos";
+import Mecanizados from "./pages/Mecanizados";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -30,6 +30,7 @@ const App = () => {
             <Route path="/agro" element={<Agronica />} />
             <Route path="/auto" element={<Automatica />} />
             <Route path="/equipos" element={<Equipos />} />
+            <Route path="/meca" element={<Mecanizados />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
