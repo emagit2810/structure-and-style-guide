@@ -75,3 +75,21 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## ¿Cómo genera Codex las capturas y por qué pueden verse como 404?
+
+- Cuando Codex comparte capturas dentro de la conversación, los archivos se guardan como artefactos temporales del entorno donde se ejecutó la tarea. Esos enlaces dejan de existir al finalizar la sesión, por lo que muestran `404` si intentas abrirlos más tarde.
+- No depende de que el proyecto tenga un dominio público en GitHub Pages; las capturas se generan a partir de un servidor de desarrollo local que se levanta con `npm run dev` dentro del contenedor.
+- El flujo es: iniciar el servidor (`npm run dev -- --host 0.0.0.0 --port 4173`), abrir esa URL local con Playwright/Chromium y guardar la imagen con un viewport fijo (por ejemplo, 1280×800). Después se adjunta el archivo resultante a la respuesta.
+- Si necesitas conservar las capturas, descárgalas antes de que termine la sesión o inclúyelas en el repositorio (por ejemplo, en `public/screenshots/`) para que queden versionadas.
+
+### Generar tus propias capturas
+
+```bash
+npm install
+npm run dev -- --host 0.0.0.0 --port 4173
+# En otra terminal (por ejemplo con Playwright):
+npx playwright screenshot http://127.0.0.1:4173/equipos equipos.png --width=1280 --height=800
+```
+
+También puedes abrir la URL en tu navegador local y capturar manualmente la pantalla.

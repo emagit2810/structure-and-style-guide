@@ -22,6 +22,14 @@ interface ServiceCardProps {
   desc: string;
 }
 
+interface GalleryImage {
+  srcSet: string;
+  fallback: string;
+  alt: string;
+  caption: string;
+  type?: string;
+}
+
 const infoCardsData: InfoCardProps[] = [
   { icon: Microscope, title: 'Diagnóstico', desc: 'Sensores y equipos de precisión agrícola.', delay: 'delay-100', extraTitle: 'MÁS DETALLE' },
   { icon: Tractor, title: 'Tratamiento', desc: 'Maquinaria y procesos de optimización.', delay: 'delay-200', extraTitle: 'VER EQUIPOS' },
@@ -36,6 +44,36 @@ const servicesData: ServiceCardProps[] = [
   { icon: Briefcase, title: 'Asesorías', desc: 'Consultoría técnica en agrotecnología.' },
   { icon: Combine, title: 'Ventas de Equipo', desc: 'Maquinaria y drones de última generación.' },
   { icon: ShieldCheck, title: 'Certificación', desc: 'Cumplimiento de normas de agricultura sostenible.' }
+];
+
+const agronicaGallery: GalleryImage[] = [
+  {
+    fallback:
+      'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3',
+    srcSet:
+      'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1501004318641-b39e6451bec6?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w',
+    type: 'image/webp',
+    alt: 'Dron agrícola sobrevolando cultivo',
+    caption: 'Monitoreo de cultivos con drones y visión multiespectral.',
+  },
+  {
+    fallback:
+      'https://images.unsplash.com/photo-1500937386664-56aa98c98e23?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3',
+    srcSet:
+      'https://images.unsplash.com/photo-1500937386664-56aa98c98e23?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1500937386664-56aa98c98e23?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w',
+    type: 'image/webp',
+    alt: 'Sistema de riego inteligente',
+    caption: 'Riego inteligente con control de caudal en tiempo real.',
+  },
+  {
+    fallback:
+      'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3',
+    srcSet:
+      'https://images.unsplash.com/photo-1524592094714-0f0654e20314?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1524592094714-0f0654e20314?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w',
+    type: 'image/webp',
+    alt: 'Invernadero monitorizado digitalmente',
+    caption: 'Invernaderos conectados con sensores de clima y nutrientes.',
+  },
 ];
 
 const Agronica = () => {
@@ -86,7 +124,10 @@ const Agronica = () => {
             <p className="text-xl text-green-100 mb-8 max-w-4xl mx-auto">
               Tecnologías para potenciar la agricultura con innovación mecánica y sostenibilidad.
             </p>
-            <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white text-lg px-8 py-6">
+            <Button
+              size="lg"
+              className="bg-green-600 text-white text-lg px-8 py-6 transition-colors duration-200 hover:bg-green-700 focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2"
+            >
               Solicitar Consulta Técnica
             </Button>
           </div>
@@ -102,7 +143,7 @@ const Agronica = () => {
               <div className="w-24 h-1 bg-green-600 mx-auto"></div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="grid md:grid-cols-2 gap-12 items-start">
               <div className="space-y-6 text-lg text-green-700 leading-relaxed">
                 <p>
                   Las tecnologías agrónicas son fundamentales para un sistema productivo sostenible. Los dispositivos de precisión y maquinaria avanzada son cruciales para la prevención de plagas, el diagnóstico de cultivos, el tratamiento de suelos y la rehabilitación de ecosistemas agrícolas.
@@ -120,22 +161,46 @@ const Agronica = () => {
                 </div>
               </div>
               
-              <div ref={cardsRef} className="grid grid-cols-2 gap-4">
-                {infoCardsData.map(({ icon: Icon, title, desc, delay, extraTitle }, index) => (
-                  <Card 
-                    key={title} 
-                    className={`relative group text-center overflow-visible transition-all duration-700 ease-out ${delay} ${isCardsVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} hover:shadow-green-600/20 hover:shadow-lg hover:-translate-y-2 border-green-200`}
-                  >
-                    <div className={`absolute left-0 right-0 py-2 px-3 bg-green-700 text-white shadow-lg z-10 transform transition-all duration-300 ease-out opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 ${index < 2 ? 'bottom-full rounded-t-lg' : 'top-full rounded-b-lg'}`}>
-                      <h5 className="font-bold uppercase text-xs tracking-wider">{extraTitle}</h5>
-                    </div>
-                    <CardContent className="pt-6">
-                      <Icon className="w-12 h-12 text-green-600 mx-auto mb-3" />
-                      <h4 className="font-semibold text-green-800 mb-2">{title}</h4>
-                      <p className="text-sm text-green-600">{desc}</p>
-                    </CardContent>
-                  </Card>
-                ))}
+              <div className="space-y-6">
+                <div className="grid sm:grid-cols-2 gap-6">
+                  {agronicaGallery.map(({ alt, caption, fallback, srcSet, type }) => (
+                    <figure
+                      key={alt}
+                      className="relative overflow-hidden rounded-xl shadow-lg transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl"
+                    >
+                      <picture>
+                        <source srcSet={srcSet} type={type ?? 'image/webp'} sizes="(min-width: 768px) 50vw, 100vw" />
+                        <img
+                          src={fallback}
+                          alt={alt}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-48 object-cover"
+                        />
+                      </picture>
+                      <figcaption className="absolute inset-x-0 bottom-0 bg-green-950/70 text-green-100 text-sm px-3 py-2">
+                        {caption}
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+                <div ref={cardsRef} className="grid grid-cols-2 gap-4">
+                  {infoCardsData.map(({ icon: Icon, title, desc, delay, extraTitle }, index) => (
+                    <Card
+                      key={title}
+                      className={`relative group text-center overflow-visible transition-all duration-700 ease-out ${delay} ${isCardsVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} hover:shadow-green-600/20 hover:shadow-lg hover:-translate-y-2 border-green-200`}
+                    >
+                      <div className={`absolute left-0 right-0 py-2 px-3 bg-green-700 text-white shadow-lg z-10 transform transition-all duration-300 ease-out opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 ${index < 2 ? 'bottom-full rounded-t-lg' : 'top-full rounded-b-lg'}`}>
+                        <h5 className="font-bold uppercase text-xs tracking-wider">{extraTitle}</h5>
+                      </div>
+                      <CardContent className="pt-6">
+                        <Icon className="w-12 h-12 text-green-600 mx-auto mb-3" />
+                        <h4 className="font-semibold text-green-800 mb-2">{title}</h4>
+                        <p className="text-sm text-green-600">{desc}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -239,10 +304,18 @@ const Agronica = () => {
                     Contamos con la experiencia y la tecnología para llevar su operación al siguiente nivel.
                 </p>
                 <div className="space-x-4">
-                    <Button variant="secondary" size="lg" className="bg-white text-green-700 hover:bg-green-50">
+                    <Button
+                      variant="secondary"
+                      size="lg"
+                      className="bg-white text-green-700 transition-colors duration-200 hover:bg-green-200 hover:text-green-900 focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2"
+                    >
                         Ver Casos de Éxito
                     </Button>
-                    <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-green-700">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="border-white text-white transition-colors duration-200 hover:bg-white hover:text-green-700 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
+                    >
                         Solicitar Cotización
                     </Button>
                 </div>
