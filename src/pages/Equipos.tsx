@@ -5,13 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Plus, Minus, Trash2, Eye, Zap, Cog, Microscope, MessageCircle } from "lucide-react";
+import { cn } from '@/lib/utils';
+
+interface ProductImage {
+  fallback: string;
+  srcSet?: string;
+  type?: string;
+}
 
 interface Product {
   id: number;
   name: string;
   category: string;
   price: number;
-  image: string;
+  image: ProductImage;
   description: string;
 }
 
@@ -21,27 +28,231 @@ interface CartItem extends Product {
 
 const products: Product[] = [
   // Mechanized
-  { id: 1, name: "Montura Mecánica de Precisión", category: "mechanized", price: 250000, image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3", description: "Montura ajustable para equipos ópticos" },
-  { id: 2, name: "Engranajes de Alta Precisión", category: "mechanized", price: 180000, image: "https://images.unsplash.com/photo-1542376770-6b9a3b176b63?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=3b9c3f2f3e7f4b1ad8e2d6b9a1c2b3d4", description: "Engranajes para sistemas láser" },
-  { id: 3, name: "Brazo Articulado Mecánico", category: "mechanized", price: 320000, image: "https://images.unsplash.com/photo-1581094644950-6f5d1b1f1c6f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=9c3e4d2a6b7e1d8f2c4b5a6d7e8f9a0b", description: "Brazo para posicionamiento de equipos" },
+  {
+    id: 1,
+    name: "Montura Mecánica de Precisión",
+    category: "mechanized",
+    price: 250000,
+    image: {
+      fallback: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3",
+    },
+    description: "Montura ajustable para equipos ópticos.",
+  },
+  {
+    id: 2,
+    name: "Engranajes de Alta Precisión",
+    category: "mechanized",
+    price: 180000,
+    image: {
+      fallback: "https://images.unsplash.com/photo-1542376770-6b9a3b176b63?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3",
+    },
+    description: "Engranajes para sistemas láser.",
+  },
+  {
+    id: 3,
+    name: "Brazo Articulado Mecánico",
+    category: "mechanized",
+    price: 320000,
+    image: {
+      fallback: "https://images.unsplash.com/photo-1581094800484-0ce28b04e036?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3",
+    },
+    description: "Brazo modular para posicionamiento de equipos.",
+  },
+  {
+    id: 15,
+    name: "Camilla Quirúrgica Motorizada",
+    category: "mechanized",
+    price: 2250000,
+    image: {
+      fallback:
+        "https://images.unsplash.com/photo-1580281657521-84a1c7c3c924?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3",
+      srcSet:
+        "https://images.unsplash.com/photo-1580281657521-84a1c7c3c924?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1580281657521-84a1c7c3c924?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w",
+      type: "image/webp",
+    },
+    description: "Camilla con posicionamiento eléctrico y memoria de posturas.",
+  },
 
   // Electronic
-  { id: 4, name: "Controlador Electrónico Láser", category: "electronic", price: 450000, image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=a1b2c3d4e5f67890123456789abcdef0", description: "Controlador para diodos láser" },
-  { id: 5, name: "Fuente de Alimentación Estabilizada", category: "electronic", price: 280000, image: "https://images.unsplash.com/photo-1605902711622-cfb43c44367e?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=4a5b6c7d8e9f0123456789abcdef0123", description: "Fuente para equipos médicos" },
-  { id: 6, name: "Módulo de Control Rayos X", category: "electronic", price: 550000, image: "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=abcdef1234567890abcdef1234567890", description: "Controlador para máquinas de rayos X" },
+  {
+    id: 4,
+    name: "Controlador Electrónico Láser",
+    category: "electronic",
+    price: 450000,
+    image: {
+      fallback: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3",
+    },
+    description: "Controlador de precisión para diodos láser.",
+  },
+  {
+    id: 5,
+    name: "Fuente de Alimentación Estabilizada",
+    category: "electronic",
+    price: 280000,
+    image: {
+      fallback: "https://images.unsplash.com/photo-1605902711622-cfb43c44367e?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3",
+    },
+    description: "Fuente para equipos médicos sensibles.",
+  },
+  {
+    id: 6,
+    name: "Módulo de Control Rayos X",
+    category: "electronic",
+    price: 550000,
+    image: {
+      fallback: "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3",
+    },
+    description: "Controlador para máquinas de rayos X.",
+  },
+  {
+    id: 16,
+    name: "Estación de Calibración Integral",
+    category: "electronic",
+    price: 1420000,
+    image: {
+      fallback:
+        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3",
+      srcSet:
+        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w",
+      type: "image/webp",
+    },
+    description: "Banco modular con calibradores digitales y registro automático.",
+  },
+  {
+    id: 18,
+    name: "Panel de Diagnóstico Multiparámetro",
+    category: "electronic",
+    price: 990000,
+    image: {
+      fallback:
+        "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3",
+      srcSet:
+        "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w",
+      type: "image/webp",
+    },
+    description: "Panel compacto con indicadores táctiles integrados.",
+  },
 
   // Optics
-  { id: 7, name: "Lentes Ópticas de Precisión", category: "optics", price: 150000, image: "https://images.unsplash.com/photo-1541534401786-5c6c6dcc0b7e?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=11223344556677889900aabbccddeeff", description: "Lentes para microscopios y equipos" },
-  { id: 8, name: "Espejos Reflectantes Láser", category: "optics", price: 200000, image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=33445566778899aabbccddeeff001122", description: "Espejos para sistemas láser" },
-  { id: 9, name: "Prismas Ópticos", category: "optics", price: 120000, image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3", description: "Prismas para equipos ópticos" },
+  {
+    id: 7,
+    name: "Lentes Ópticas de Precisión",
+    category: "optics",
+    price: 150000,
+    image: {
+      fallback: "https://images.unsplash.com/photo-1541534401786-5c6c6dcc0b7e?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3",
+    },
+    description: "Lentes para microscopios y sistemas ópticos.",
+  },
+  {
+    id: 8,
+    name: "Espejos Reflectantes Láser",
+    category: "optics",
+    price: 200000,
+    image: {
+      fallback: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3",
+    },
+    description: "Espejos dieléctricos para sistemas láser.",
+  },
+  {
+    id: 9,
+    name: "Prismas Ópticos",
+    category: "optics",
+    price: 120000,
+    image: {
+      fallback: "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3",
+    },
+    description: "Prismas de alta dispersión para instrumentación.",
+  },
+  {
+    id: 14,
+    name: "Estación Láser Oftálmica",
+    category: "optics",
+    price: 1850000,
+    image: {
+      fallback:
+        "https://images.unsplash.com/photo-1580281658560-1cae9be7b61f?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3",
+      srcSet:
+        "https://images.unsplash.com/photo-1580281658560-1cae9be7b61f?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1580281658560-1cae9be7b61f?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w",
+      type: "image/webp",
+    },
+    description: "Sistema integral para alineación de láser oftálmico.",
+  },
 
   // Aesthetics (additional)
-  { id: 10, name: "Láser de Depilación", category: "aesthetics", price: 1200000, image: "https://images.unsplash.com/photo-1536305030012-6a1f4b6a5d2b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=66778899aabbccddeeff001122334455", description: "Equipo láser para estética" },
-  { id: 11, name: "Máquina de Radiofrecuencia", category: "aesthetics", price: 800000, image: "https://images.unsplash.com/photo-1582719478147-5f5f5f5f5f5f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=77889900aabbccddeeff001122334455", description: "Equipo de radiofrecuencia estética" },
+  {
+    id: 10,
+    name: "Láser de Depilación",
+    category: "aesthetics",
+    price: 1200000,
+    image: {
+      fallback: "https://images.unsplash.com/photo-1536305030012-6a1f4b6a5d2b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3",
+    },
+    description: "Equipo láser para estética profesional.",
+  },
+  {
+    id: 11,
+    name: "Máquina de Radiofrecuencia",
+    category: "aesthetics",
+    price: 800000,
+    image: {
+      fallback:
+        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80&ixlib=rb-4.0.3",
+    },
+    description: "Equipo de radiofrecuencia para tratamientos dérmicos.",
+  },
+  {
+    id: 19,
+    name: "Sistema de Anestesia Inteligente",
+    category: "aesthetics",
+    price: 3120000,
+    image: {
+      fallback:
+        "https://images.unsplash.com/photo-1582719478147-5fd16926c8ff?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3",
+      srcSet:
+        "https://images.unsplash.com/photo-1582719478147-5fd16926c8ff?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1582719478147-5fd16926c8ff?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w",
+      type: "image/webp",
+    },
+    description: "Mezcla asistida de gases con alarmas redundantes.",
+  },
 
   // Ray Machines (additional)
-  { id: 12, name: "Generador de Rayos X", category: "ray-machines", price: 2500000, image: "https://images.unsplash.com/photo-1582719478147-8a8a8a8a8a8a?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=889900aabbccddeeff00112233445566", description: "Generador para equipos de rayos X" },
-  { id: 13, name: "Detector de Rayos X", category: "ray-machines", price: 900000, image: "https://images.unsplash.com/photo-1582719478147-9b9b9b9b9b9b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=9900aabbccddeeff0011223344556677", description: "Detector digital para rayos X" },
+  {
+    id: 12,
+    name: "Generador de Rayos X",
+    category: "ray-machines",
+    price: 2500000,
+    image: {
+      fallback:
+        "https://images.unsplash.com/photo-1580281658301-4a8d0ebba9e0?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3",
+    },
+    description: "Generador de alto rendimiento para rayos X.",
+  },
+  {
+    id: 13,
+    name: "Detector de Rayos X",
+    category: "ray-machines",
+    price: 900000,
+    image: {
+      fallback:
+        "https://images.unsplash.com/photo-1582719478253-4e88f37e14b4?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3",
+    },
+    description: "Detector digital de alta sensibilidad.",
+  },
+  {
+    id: 17,
+    name: "Torre de Endoscopia Digital",
+    category: "ray-machines",
+    price: 2680000,
+    image: {
+      fallback:
+        "https://images.unsplash.com/photo-1580281658560-1cae9be7b61f?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3",
+      srcSet:
+        "https://images.unsplash.com/photo-1580281658560-1cae9be7b61f?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1580281658560-1cae9be7b61f?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w",
+      type: "image/webp",
+    },
+    description: "Plataforma 4K con captura y control de iluminación integrados.",
+  },
 ];
 
 const categories = [
@@ -57,26 +268,27 @@ const Equipos = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const filteredProducts = selectedCategory === 'all' ? products : products.filter(p => p.category === selectedCategory);
+  const filteredProducts =
+    selectedCategory === 'all' ? products : products.filter((p) => p.category === selectedCategory);
 
   const addToCart = (product: Product) => {
-    setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === product.id);
       if (existing) {
-        return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
+        return prev.map((item) => (item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item));
       }
       return [...prev, { ...product, quantity: 1 }];
     });
   };
 
-  // Abre WhatsApp con un mensaje prellenado sobre el producto
   const enviarWhatsApp = (product: Product, numeroWhatsApp = "573134627810") => {
-    const mensaje = `🛒 *Solicitud de Información*\n\n` +
-                    `📦 *Producto:* ${product.name}\n` +
-                    `💰 *Precio:* $${product.price.toLocaleString()}\n` +
-                    `🏷️ *Categoría:* ${product.category}\n` +
-                    `📝 *Descripción:* ${product.description}\n\n` +
-                    `Me interesa este producto. ¿Podrían darme más información?`;
+    const mensaje =
+      `🛒 *Solicitud de Información*\n\n` +
+      `📦 *Producto:* ${product.name}\n` +
+      `💰 *Precio:* $${product.price.toLocaleString()}\n` +
+      `🏷️ *Categoría:* ${product.category}\n` +
+      `📝 *Descripción:* ${product.description}\n\n` +
+      `Me interesa este producto. ¿Podrían darme más información?`;
 
     const mensajeCodificado = encodeURIComponent(mensaje);
     const url = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
@@ -88,11 +300,11 @@ const Equipos = () => {
       removeFromCart(id);
       return;
     }
-    setCart(prev => prev.map(item => item.id === id ? { ...item, quantity } : item));
+    setCart((prev) => prev.map((item) => (item.id === id ? { ...item, quantity } : item)));
   };
 
   const removeFromCart = (id: number) => {
-    setCart(prev => prev.filter(item => item.id !== id));
+    setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -102,16 +314,27 @@ const Equipos = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative py-28 px-6 text-white flex items-center justify-center" style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section
+        className="relative py-28 px-6 text-white flex items-center justify-center"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url(https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
         <div className="relative max-w-6xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             Tienda de Equipos <span className="text-blue-200">Ópticos y Médicos</span>
           </h1>
           <p className="text-xl text-blue-100 mb-8 max-w-4xl mx-auto">
-            Productos especializados en óptica, estética, láseres y máquinas de rayos. 
+            Productos especializados en óptica, estética, láseres y máquinas de rayos.
             Tecnología de vanguardia para profesionales de la salud y la ciencia.
           </p>
-          <Button size="lg" className="bg-blue-500 hover:bg-blue-400 text-white">
+          <Button
+            size="lg"
+            className="bg-blue-600 text-white rounded-full px-8 py-6 transition-colors duration-200 hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2"
+          >
             Explorar Productos
           </Button>
         </div>
@@ -130,7 +353,12 @@ const Equipos = () => {
                 key={key}
                 variant={selectedCategory === key ? "default" : "outline"}
                 onClick={() => setSelectedCategory(key)}
-                className={`flex items-center gap-2 ${selectedCategory === key ? 'bg-blue-600 text-white' : 'border-blue-300 text-blue-700 hover:bg-blue-100'}`}
+                className={cn(
+                  "flex items-center gap-2 rounded-full px-5 py-2 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2",
+                  selectedCategory === key
+                    ? "bg-blue-600 border-blue-600 text-white hover:bg-blue-700"
+                    : "border-blue-200 text-blue-700 hover:bg-blue-100 hover:text-blue-900"
+                )}
               >
                 <Icon className="w-4 h-4" />
                 {label}
@@ -150,23 +378,47 @@ const Equipos = () => {
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map(product => (
-              <Card key={product.id} className="group hover:shadow-lg transition-shadow border-blue-200">
+            {filteredProducts.map((product) => (
+              <Card
+                key={product.id}
+                className="group border border-blue-200 rounded-xl overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl focus-within:ring-2 focus-within:ring-blue-300 focus-within:ring-offset-2"
+              >
                 <CardHeader className="p-0">
-                  <img src={product.image} alt={product.name} className="w-full h-48 object-cover rounded-t-lg" />
+                  <picture>
+                    {product.image.srcSet && (
+                      <source
+                        srcSet={product.image.srcSet}
+                        type={product.image.type ?? 'image/webp'}
+                        sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                      />
+                    )}
+                    <img
+                      src={product.image.fallback}
+                      loading="lazy"
+                      decoding="async"
+                      alt={product.name}
+                      className="w-full h-52 object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                    />
+                  </picture>
                 </CardHeader>
                 <CardContent className="p-6">
                   <Badge variant="outline" className="mb-2 border-blue-300 text-blue-700">
-                    {categories.find(c => c.key === product.category)?.label}
+                    {categories.find((c) => c.key === product.category)?.label}
                   </Badge>
                   <CardTitle className="text-blue-800 mb-2">{product.name}</CardTitle>
                   <CardDescription className="text-blue-600 mb-4">{product.description}</CardDescription>
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-blue-700">${product.price.toLocaleString()}</span>
-                    <Button onClick={() => { addToCart(product); enviarWhatsApp(product); }} className="bg-blue-600 hover:bg-blue-500 text-white flex items-center">
-                      <Plus className="w-4 h-4 mr-2" />
+                    <Button
+                      onClick={() => {
+                        addToCart(product);
+                        enviarWhatsApp(product);
+                      }}
+                      className="bg-blue-600 text-white flex items-center gap-2 rounded-full px-4 py-2 transition-colors duration-200 hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2"
+                    >
+                      <Plus className="w-4 h-4" />
                       Agregar
-                      <MessageCircle className="w-4 h-4 ml-2" />
+                      <MessageCircle className="w-4 h-4" />
                     </Button>
                   </div>
                 </CardContent>
@@ -194,11 +446,17 @@ const Equipos = () => {
           ) : (
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="space-y-4">
-                {cart.map(item => (
+                {cart.map((item) => (
                   <Card key={item.id} className="border-blue-200">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-4">
-                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
+                        <img
+                          src={item.image.fallback}
+                          alt={item.name}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-16 h-16 object-cover rounded"
+                        />
                         <div className="flex-1">
                           <h3 className="font-semibold text-blue-800">{item.name}</h3>
                           <p className="text-blue-600">${item.price.toLocaleString()}</p>
@@ -208,7 +466,7 @@ const Equipos = () => {
                             size="sm"
                             variant="outline"
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="border-blue-300 text-blue-700"
+                            className="border-blue-300 text-blue-700 transition-colors duration-200 hover:bg-blue-100 focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2"
                           >
                             <Minus className="w-4 h-4" />
                           </Button>
@@ -217,15 +475,11 @@ const Equipos = () => {
                             size="sm"
                             variant="outline"
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="border-blue-300 text-blue-700"
+                            className="border-blue-300 text-blue-700 transition-colors duration-200 hover:bg-blue-100 focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2"
                           >
                             <Plus className="w-4 h-4" />
                           </Button>
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => removeFromCart(item.id)}
-                          >
+                          <Button size="sm" variant="destructive" onClick={() => removeFromCart(item.id)}>
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
@@ -237,9 +491,11 @@ const Equipos = () => {
               <div className="bg-white p-6 rounded-lg shadow border border-blue-200">
                 <h3 className="text-xl font-bold text-blue-800 mb-4">Resumen del Pedido</h3>
                 <div className="space-y-2 mb-4">
-                  {cart.map(item => (
+                  {cart.map((item) => (
                     <div key={item.id} className="flex justify-between text-blue-700">
-                      <span>{item.name} x{item.quantity}</span>
+                      <span>
+                        {item.name} x{item.quantity}
+                      </span>
                       <span>${(item.price * item.quantity).toLocaleString()}</span>
                     </div>
                   ))}
@@ -250,7 +506,7 @@ const Equipos = () => {
                     <span>${total.toLocaleString()}</span>
                   </div>
                 </div>
-                <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-500 text-white">
+                <Button className="w-full mt-6 bg-blue-600 text-white transition-colors duration-200 hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2">
                   Proceder al Pago
                 </Button>
               </div>

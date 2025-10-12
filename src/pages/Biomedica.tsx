@@ -13,6 +13,44 @@ const diagnosticCards = [
   { icon: Zap, title: 'Rehabilitación', desc: 'Recuperación', delay: 'delay-[550ms]', extraTitle: 'CONOCER MÁS', extraDesc: 'Tecnología de apoyo para la recuperación funcional del paciente.' }
 ];
 
+interface GalleryImage {
+  srcSet: string;
+  fallback: string;
+  alt: string;
+  caption: string;
+  type?: string;
+}
+
+const biomedGallery: GalleryImage[] = [
+  {
+    fallback:
+      'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3',
+    srcSet:
+      'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1586773860418-d37222d8fce3?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w',
+    type: 'image/webp',
+    alt: 'Sala de resonancia magnética preparada',
+    caption: 'Salas de resonancia con monitoreo remoto y calibración continua.',
+  },
+  {
+    fallback:
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3',
+    srcSet:
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w',
+    type: 'image/webp',
+    alt: 'Equipo biomédico colaborando en laboratorio',
+    caption: 'Equipos multidisciplinarios coordinando mantenimiento clínico.',
+  },
+  {
+    fallback:
+      'https://images.unsplash.com/photo-1580281658629-6cb04f886040?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3',
+    srcSet:
+      'https://images.unsplash.com/photo-1580281658629-6cb04f886040?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1580281658629-6cb04f886040?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w',
+    type: 'image/webp',
+    alt: 'Monitores quirúrgicos sincronizados',
+    caption: 'Quirófanos digitales con sincronización de signos vitales.',
+  },
+];
+
 const Biomedica = () => {
   const [isCardsVisible, setIsCardsVisible] = useState(false);
   const cardsRef = useRef(null);
@@ -67,7 +105,10 @@ const Biomedica = () => {
             Tecnologías sanitarias fundamentales para sistemas de salud operativos. 
             Especialistas en dispositivos médicos para prevención, diagnóstico, tratamiento y rehabilitación.
           </p>
-          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-trust-blue">
+          <Button
+            size="lg"
+            className="bg-primary text-primary-foreground transition-colors duration-200 hover:bg-trust-blue focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2"
+          >
             Solicitar Consulta Técnica
           </Button>
         </div>
@@ -83,7 +124,7 @@ const Biomedica = () => {
             <div className="w-20 h-1 bg-primary mx-auto"></div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
               <p className="text-tech-gray mb-6 text-lg leading-relaxed">
                 Las tecnologías sanitarias son fundamentales en un sistema de salud operativo. Los dispositivos médicos son cruciales para la prevención, el diagnóstico, el tratamiento y la rehabilitación de enfermedades.
@@ -101,37 +142,60 @@ const Biomedica = () => {
               </div>
             </div>
             
-            <div ref={cardsRef} className="grid grid-cols-2 gap-4">
-              {diagnosticCards.map(({ icon: Icon, title, desc, delay, extraTitle, extraDesc }, index) => (
-                <Card 
-                  key={title} 
-                  className={`
+            <div className="space-y-6">
+              <div className="grid sm:grid-cols-2 gap-6">
+                {biomedGallery.map(({ alt, caption, fallback, srcSet, type }) => (
+                  <figure
+                    key={alt}
+                    className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl"
+                  >
+                    <picture>
+                      <source srcSet={srcSet} type={type ?? 'image/webp'} sizes="(min-width: 768px) 50vw, 100vw" />
+                      <img
+                        src={fallback}
+                        alt={alt}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-48 object-cover"
+                      />
+                    </picture>
+                    <figcaption className="absolute inset-x-0 bottom-0 bg-foreground/70 text-primary-foreground text-xs px-3 py-2">
+                      {caption}
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+              <div ref={cardsRef} className="grid grid-cols-2 gap-4">
+                {diagnosticCards.map(({ icon: Icon, title, desc, delay, extraTitle, extraDesc }, index) => (
+                  <Card
+                    key={title}
+                    className={`
                     relative group text-center overflow-visible
                     transition-all duration-700 ease-out ${delay}
                     ${isCardsVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}
                     hover:bg-blue-200
                     ${index < 2 ? 'group-hover:rounded-t-none' : 'group-hover:rounded-b-none'}
                   `}
-                >
-                  {/* Pestaña de información extra en hover */}
-                  <div className={`
+                  >
+                    <div className={`
                     absolute left-0 right-0 py-2 px-3 bg-foreground text-primary-foreground shadow-lg z-10
                     transform transition-all duration-300 ease-out
                     opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100
-                    ${index < 2 
-                      ? 'bottom-full rounded-t-lg' 
+                    ${index < 2
+                      ? 'bottom-full rounded-t-lg'
                       : 'top-full rounded-b-lg'
                     }
                   `}>
-                    <h5 className="font-bold uppercase text-xs tracking-wider">{extraTitle}</h5>
-                  </div>
-                  <CardContent className="pt-6">
-                    <Icon className="w-12 h-12 text-primary mx-auto mb-3" />
-                    <h4 className="font-semibold text-card-foreground mb-2">{title}</h4>
-                    <p className="text-sm text-tech-gray">{desc}</p>
-                  </CardContent>
-                </Card>
-              ))}
+                      <h5 className="font-bold uppercase text-xs tracking-wider">{extraTitle}</h5>
+                    </div>
+                    <CardContent className="pt-6">
+                      <Icon className="w-12 h-12 text-primary mx-auto mb-3" />
+                      <h4 className="font-semibold text-card-foreground mb-2">{title}</h4>
+                      <p className="text-sm text-tech-gray">{desc}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -245,10 +309,18 @@ const Biomedica = () => {
             Contamos con la experiencia y certificaciones necesarias para garantizar el óptimo funcionamiento de sus equipos médicos
           </p>
           <div className="space-x-4">
-            <Button variant="outline" size="lg" className="bg-white text-primary hover:bg-gray-100">
+            <Button
+              variant="outline"
+              size="lg"
+              className="bg-white text-primary transition-colors duration-200 hover:bg-gray-200 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+            >
               Ver Casos de Estudio
             </Button>
-            <Button variant="outline" size="lg" className="bg-accent text-accent-foreground hover:bg-trust-blue">
+            <Button
+              variant="outline"
+              size="lg"
+              className="bg-accent text-accent-foreground transition-colors duration-200 hover:bg-accent/90 focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2"
+            >
               Solicitar Cotización
             </Button>
           </div>

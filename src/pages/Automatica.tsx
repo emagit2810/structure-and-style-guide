@@ -13,6 +13,44 @@ const diagnosticCards = [
   { icon: Zap, title: 'Control', desc: 'Automatización total', delay: 'delay-[550ms]', extraTitle: 'CONOCER MÁS', extraDesc: 'Sistemas de control y supervisión SCADA avanzados.' }
 ];
 
+interface GalleryImage {
+  srcSet: string;
+  fallback: string;
+  alt: string;
+  caption: string;
+  type?: string;
+}
+
+const automationGallery: GalleryImage[] = [
+  {
+    fallback:
+      'https://images.unsplash.com/photo-1581092334520-58f7996c9f66?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3',
+    srcSet:
+      'https://images.unsplash.com/photo-1581092334520-58f7996c9f66?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1581092334520-58f7996c9f66?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w',
+    type: 'image/webp',
+    alt: 'Brazo robótico ensamblando componentes',
+    caption: 'Robots colaborativos para líneas de producción flexibles.',
+  },
+  {
+    fallback:
+      'https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3',
+    srcSet:
+      'https://images.unsplash.com/photo-1581090700227-1e37b190418e?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1581090700227-1e37b190418e?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w',
+    type: 'image/webp',
+    alt: 'Sala de control industrial con paneles digitales',
+    caption: 'Centros de control integrados con analítica en tiempo real.',
+  },
+  {
+    fallback:
+      'https://images.unsplash.com/photo-1581090467325-0f06c81f2d39?auto=format&fit=crop&w=960&q=80&ixlib=rb-4.0.3',
+    srcSet:
+      'https://images.unsplash.com/photo-1581090467325-0f06c81f2d39?fit=crop&w=640&q=80&fm=webp&ixlib=rb-4.0.3 640w, https://images.unsplash.com/photo-1581090467325-0f06c81f2d39?fit=crop&w=1280&q=80&fm=webp&ixlib=rb-4.0.3 1280w',
+    type: 'image/webp',
+    alt: 'Panel PLC con cableado estructurado',
+    caption: 'Gabinetes PLC diseñados para mantenimiento predictivo.',
+  },
+];
+
 const Automatica = () => {
   const [isCardsVisible, setIsCardsVisible] = useState(false);
   const cardsRef = useRef(null);
@@ -65,7 +103,10 @@ const Automatica = () => {
             Tecnologías de automatización fundamentales para sistemas industriales eficientes. 
             Especialistas en herramientas mecánicas y control de procesos automatizados.
           </p>
-          <Button size="lg" className="bg-yellow-500 text-black hover:bg-yellow-400 font-semibold">
+          <Button
+            size="lg"
+            className="bg-yellow-500 text-black font-semibold transition-colors duration-200 hover:bg-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-200 focus-visible:ring-offset-2"
+          >
             Solicitar Consulta Técnica
           </Button>
         </div>
@@ -81,7 +122,7 @@ const Automatica = () => {
             <div className="w-20 h-1 bg-yellow-500 mx-auto"></div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
               <p className="text-gray-600 mb-6 text-lg leading-relaxed">
                 Las tecnologías de automatización son fundamentales en un sistema industrial operativo. Las herramientas mecánicas automatizadas son cruciales para la optimización, el control, el diagnóstico y el mantenimiento de procesos industriales.
@@ -99,37 +140,60 @@ const Automatica = () => {
               </div>
             </div>
             
-            <div ref={cardsRef} className="grid grid-cols-2 gap-4">
-              {diagnosticCards.map(({ icon: Icon, title, desc, delay, extraTitle, extraDesc }, index) => (
-                <Card 
-                  key={title} 
-                  className={`
+            <div className="space-y-6">
+              <div className="grid sm:grid-cols-2 gap-6">
+                {automationGallery.map(({ alt, caption, fallback, srcSet, type }) => (
+                  <figure
+                    key={alt}
+                    className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl"
+                  >
+                    <picture>
+                      <source srcSet={srcSet} type={type ?? 'image/webp'} sizes="(min-width: 768px) 50vw, 100vw" />
+                      <img
+                        src={fallback}
+                        alt={alt}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-48 object-cover"
+                      />
+                    </picture>
+                    <figcaption className="absolute inset-x-0 bottom-0 bg-slate-900/70 text-slate-50 text-xs px-3 py-2">
+                      {caption}
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+              <div ref={cardsRef} className="grid grid-cols-2 gap-4">
+                {diagnosticCards.map(({ icon: Icon, title, desc, delay, extraTitle, extraDesc }, index) => (
+                  <Card
+                    key={title}
+                    className={`
                     relative group text-center overflow-visible
                     transition-all duration-700 ease-out ${delay}
                     ${isCardsVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}
                     hover:bg-yellow-100 border border-gray-200
                     ${index < 2 ? 'group-hover:rounded-t-none' : 'group-hover:rounded-b-none'}
                   `}
-                >
-                  {/* Pestaña de información extra en hover */}
-                  <div className={`
+                  >
+                    <div className={`
                     absolute left-0 right-0 py-2 px-3 bg-gray-800 text-white shadow-lg z-10
                     transform transition-all duration-300 ease-out
                     opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100
-                    ${index < 2 
-                      ? 'bottom-full rounded-t-lg' 
+                    ${index < 2
+                      ? 'bottom-full rounded-t-lg'
                       : 'top-full rounded-b-lg'
                     }
                   `}>
-                    <h5 className="font-bold uppercase text-xs tracking-wider">{extraTitle}</h5>
-                  </div>
-                  <CardContent className="pt-6">
-                    <Icon className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
-                    <h4 className="font-semibold text-gray-800 mb-2">{title}</h4>
-                    <p className="text-sm text-gray-600">{desc}</p>
-                  </CardContent>
-                </Card>
-              ))}
+                      <h5 className="font-bold uppercase text-xs tracking-wider">{extraTitle}</h5>
+                    </div>
+                    <CardContent className="pt-6">
+                      <Icon className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
+                      <h4 className="font-semibold text-gray-800 mb-2">{title}</h4>
+                      <p className="text-sm text-gray-600">{desc}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -243,10 +307,17 @@ const Automatica = () => {
             Contamos con la experiencia y certificaciones necesarias para garantizar el óptimo funcionamiento de sus sistemas automatizados
           </p>
           <div className="space-x-4">
-            <Button variant="outline" size="lg" className="bg-white text-black hover:bg-gray-100 border-gray-300">
+            <Button
+              variant="outline"
+              size="lg"
+              className="bg-white text-black border-gray-300 transition-colors duration-200 hover:bg-gray-200 focus-visible:ring-2 focus-visible:ring-gray-300 focus-visible:ring-offset-2"
+            >
               Ver Casos de Estudio
             </Button>
-            <Button size="lg" className="bg-orange-500 text-white hover:bg-orange-600">
+            <Button
+              size="lg"
+              className="bg-orange-500 text-white transition-colors duration-200 hover:bg-orange-600 focus-visible:ring-2 focus-visible:ring-orange-200 focus-visible:ring-offset-2"
+            >
               Solicitar Cotización
             </Button>
           </div>
