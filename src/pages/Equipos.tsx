@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/button";
@@ -52,6 +52,43 @@ const categories = [
   { key: 'aesthetics', label: 'Estéticos', icon: Eye },
   { key: 'ray-machines', label: 'Rayos X', icon: Zap },
 ];
+
+const heroButtonStyles: CSSProperties = {
+  '--btn-bg': '#2563eb',
+  '--btn-bg-hover': '#1d4ed8',
+  '--btn-fg': '#f8fafc',
+  '--btn-fg-hover': '#ffffff',
+  '--btn-shadow-rest': '0 16px 32px rgba(37, 99, 235, 0.28)',
+  '--btn-shadow-hover': '0 22px 40px rgba(29, 78, 216, 0.36)',
+};
+
+const categorySelectedStyles: CSSProperties = {
+  '--btn-bg': '#1d4ed8',
+  '--btn-bg-hover': '#1e40af',
+  '--btn-fg': '#f8fafc',
+  '--btn-fg-hover': '#ffffff',
+  '--btn-shadow-rest': '0 12px 28px rgba(30, 64, 175, 0.32)',
+  '--btn-shadow-hover': '0 18px 36px rgba(30, 64, 175, 0.38)',
+};
+
+const categoryUnselectedStyles: CSSProperties = {
+  '--btn-bg': 'rgba(255, 255, 255, 0.92)',
+  '--btn-bg-hover': 'rgba(226, 232, 240, 0.96)',
+  '--btn-fg': '#1d4ed8',
+  '--btn-fg-hover': '#1e3a8a',
+  '--btn-secondary-border': 'rgba(148, 163, 184, 0.6)',
+  '--btn-shadow-rest': '0 10px 24px rgba(30, 64, 175, 0.15)',
+  '--btn-shadow-hover': '0 14px 30px rgba(30, 64, 175, 0.22)',
+};
+
+const addToCartButtonStyles: CSSProperties = {
+  '--btn-bg': '#2563eb',
+  '--btn-bg-hover': '#1d4ed8',
+  '--btn-fg': '#f8fafc',
+  '--btn-fg-hover': '#ffffff',
+  '--btn-shadow-rest': '0 14px 30px rgba(37, 99, 235, 0.28)',
+  '--btn-shadow-hover': '0 18px 38px rgba(29, 78, 216, 0.36)',
+};
 
 const Equipos = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -111,9 +148,20 @@ const Equipos = () => {
             Productos especializados en óptica, estética, láseres y máquinas de rayos. 
             Tecnología de vanguardia para profesionales de la salud y la ciencia.
           </p>
-          <Button size="lg" className="bg-blue-500 hover:bg-blue-400 text-white">
+          <Button size="lg" style={heroButtonStyles} className="px-8 text-lg">
             Explorar Productos
           </Button>
+        </div>
+      </section>
+
+      <section aria-labelledby="equipos-intro" className="px-6 py-12">
+        <div className="max-w-4xl mx-auto bg-white/80 backdrop-blur rounded-2xl shadow-card p-8">
+          <h2 id="equipos-intro" className="text-3xl font-bold text-blue-900 mb-4 text-center">Equipos</h2>
+          <p className="text-lg text-blue-700 leading-relaxed text-center">
+            En <strong>Equipos</strong> encontrarás nuestra tienda de soluciones electrónicas para laboratorio e industria:
+            analizadores, fuentes de poder, sensores, módulos de control y más. Todos los productos incluyen garantía y soporte
+            técnico especializado.
+          </p>
         </div>
       </section>
 
@@ -128,9 +176,10 @@ const Equipos = () => {
             {categories.map(({ key, label, icon: Icon }) => (
               <Button
                 key={key}
-                variant={selectedCategory === key ? "default" : "outline"}
+                variant={selectedCategory === key ? "default" : "secondary"}
                 onClick={() => setSelectedCategory(key)}
-                className={`flex items-center gap-2 ${selectedCategory === key ? 'bg-blue-600 text-white' : 'border-blue-300 text-blue-700 hover:bg-blue-100'}`}
+                style={selectedCategory === key ? categorySelectedStyles : categoryUnselectedStyles}
+                className="flex items-center gap-2"
               >
                 <Icon className="w-4 h-4" />
                 {label}
@@ -163,7 +212,12 @@ const Equipos = () => {
                   <CardDescription className="text-blue-600 mb-4">{product.description}</CardDescription>
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-blue-700">${product.price.toLocaleString()}</span>
-                    <Button onClick={() => { addToCart(product); enviarWhatsApp(product); }} className="bg-blue-600 hover:bg-blue-500 text-white flex items-center">
+                    <Button
+                      onClick={() => { addToCart(product); enviarWhatsApp(product); }}
+                      variant="default"
+                      style={addToCartButtonStyles}
+                      className="flex items-center"
+                    >
                       <Plus className="w-4 h-4 mr-2" />
                       Agregar
                       <MessageCircle className="w-4 h-4 ml-2" />

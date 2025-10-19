@@ -1,9 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Cog, Ruler, Wrench, Clock, Award, Zap, Cpu, ShieldCheck, Factory } from "lucide-react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import ServiceCarousel from "@/components/ServiceCarousel";
 
 const processingCards = [
   { icon: Ruler, title: 'Diseño', desc: 'CAD/CAM avanzado', delay: 'delay-100', extraTitle: 'MÁS DETALLE', extraDesc: 'Modelado 3D y programación CNC de precisión.' },
@@ -11,6 +13,53 @@ const processingCards = [
   { icon: Settings, title: 'Control', desc: 'Tolerancias exactas', delay: 'delay-350', extraTitle: 'VER PLANES', extraDesc: 'Verificación dimensional con equipos certificados.' },
   { icon: Zap, title: 'Producción', desc: 'Serie y prototipo', delay: 'delay-[550ms]', extraTitle: 'CONOCER MÁS', extraDesc: 'Fabricación rápida desde prototipos hasta serie.' }
 ];
+
+const mecanizadosCarouselImages = [
+  {
+    src: 'https://images.unsplash.com/photo-1580894894513-541e068a673f?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Torno CNC mecanizando un componente metálico',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Soldador trabajando en taller con chispas de metal',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Fresadora de precisión cortando bloque de aluminio',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1503389152951-9f343605f61e?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Proceso de corte por láser en lámina metálica',
+  },
+];
+
+const mecanizadosHeroButtonStyles: CSSProperties = {
+  '--btn-bg': '#f97316',
+  '--btn-bg-hover': '#ea580c',
+  '--btn-fg': '#0f172a',
+  '--btn-fg-hover': '#0f172a',
+  '--btn-shadow-rest': '0 16px 34px rgba(249, 115, 22, 0.28)',
+  '--btn-shadow-hover': '0 22px 44px rgba(234, 88, 12, 0.35)',
+};
+
+const mecanizadosSecondaryCtaStyles: CSSProperties = {
+  '--btn-bg': 'rgba(255, 255, 255, 0.94)',
+  '--btn-bg-hover': 'rgba(241, 245, 249, 0.98)',
+  '--btn-fg': '#0f172a',
+  '--btn-fg-hover': '#0f172a',
+  '--btn-shadow-rest': '0 14px 30px rgba(15, 23, 42, 0.22)',
+  '--btn-shadow-hover': '0 18px 36px rgba(15, 23, 42, 0.3)',
+  '--btn-secondary-border': 'rgba(148, 163, 184, 0.55)',
+};
+
+const mecanizadosPrimaryCtaStyles: CSSProperties = {
+  '--btn-bg': '#f97316',
+  '--btn-bg-hover': '#ea580c',
+  '--btn-fg': '#0f172a',
+  '--btn-fg-hover': '#0f172a',
+  '--btn-shadow-rest': '0 16px 34px rgba(249, 115, 22, 0.32)',
+  '--btn-shadow-hover': '0 22px 44px rgba(234, 88, 12, 0.4)',
+};
 
 const Mecanizados = () => {
   const [isCardsVisible, setIsCardsVisible] = useState(false);
@@ -61,7 +110,7 @@ const Mecanizados = () => {
             Fabricación de piezas y componentes con tolerancias exactas mediante CNC. 
             Prototipado rápido y producción en serie para diversas industrias.
           </p>
-          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-accent">
+          <Button size="lg" style={mecanizadosHeroButtonStyles} className="px-8 text-lg">
             Solicitar Consulta Técnica
           </Button>
         </div>
@@ -227,6 +276,11 @@ const Mecanizados = () => {
         </div>
       </section>
 
+      <ServiceCarousel
+        images={mecanizadosCarouselImages}
+        ariaLabel="Galería de mecanizados de precisión"
+      />
+
       {/* CTA Final */}
       <section className="bg-primary py-16 px-6">
         <div className="max-w-4xl mx-auto text-center">
@@ -236,11 +290,11 @@ const Mecanizados = () => {
           <p className="text-xl text-primary-foreground mb-8 opacity-90">
             Contamos con la experiencia y tecnología necesarias para garantizar la máxima precisión en cada pieza fabricada
           </p>
-          <div className="space-x-4">
-            <Button variant="outline" size="lg" className="bg-white text-primary hover:bg-gray-100">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Button variant="secondary" size="lg" style={mecanizadosSecondaryCtaStyles}>
               Ver Casos de Estudio
             </Button>
-            <Button variant="outline" size="lg" className="bg-accent text-accent-foreground hover:opacity-90">
+            <Button variant="default" size="lg" style={mecanizadosPrimaryCtaStyles}>
               Solicitar Cotización
             </Button>
           </div>
@@ -248,17 +302,7 @@ const Mecanizados = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-foreground text-background py-8 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <h4 className="text-xl font-bold mb-2">Mecanizados de Precisión</h4>
-          <p className="text-muted-foreground mb-4">
-            Especialistas en fabricación de precisión • Torneado • Fresado • Corte por Láser • Prototipos • Producción en Serie
-          </p>
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Mecanizados de Precisión. Ingeniería para todos. Todos los derechos reservados.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

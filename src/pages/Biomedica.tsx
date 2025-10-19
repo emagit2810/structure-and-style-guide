@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import ServiceCarousel from "@/components/ServiceCarousel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +14,53 @@ const diagnosticCards = [
   { icon: Settings, title: 'Prevención', desc: 'Mantenimiento', delay: 'delay-350', extraTitle: 'VER PLANES', extraDesc: 'Programas de mantenimiento preventivo para evitar fallos.' },
   { icon: Zap, title: 'Rehabilitación', desc: 'Recuperación', delay: 'delay-[550ms]', extraTitle: 'CONOCER MÁS', extraDesc: 'Tecnología de apoyo para la recuperación funcional del paciente.' }
 ];
+
+const biomedCarouselImages = [
+  {
+    src: 'https://images.unsplash.com/photo-1559757175-5700dde6756b?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Técnica biomédica calibrando un equipo de resonancia magnética',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1580894908361-967195033215?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Sala de laboratorio con dispositivos médicos en análisis',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1583912268180-2f6f0dce274c?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Profesionales verificando panel de control biomédico',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Investigadora revisando muestras en laboratorio clínico',
+  },
+];
+
+const biomedHeroButtonStyles: CSSProperties = {
+  '--btn-bg': '#2563eb',
+  '--btn-bg-hover': '#1d4ed8',
+  '--btn-fg': '#f8fafc',
+  '--btn-fg-hover': '#ffffff',
+  '--btn-shadow-rest': '0 16px 34px rgba(37, 99, 235, 0.32)',
+  '--btn-shadow-hover': '0 22px 40px rgba(29, 78, 216, 0.38)',
+};
+
+const biomedSecondaryCtaStyles: CSSProperties = {
+  '--btn-bg': 'rgba(255, 255, 255, 0.95)',
+  '--btn-bg-hover': 'rgba(240, 249, 255, 0.98)',
+  '--btn-fg': '#1e3a8a',
+  '--btn-fg-hover': '#1d4ed8',
+  '--btn-shadow-rest': '0 14px 30px rgba(37, 99, 235, 0.22)',
+  '--btn-shadow-hover': '0 18px 36px rgba(29, 78, 216, 0.3)',
+  '--btn-secondary-border': 'rgba(191, 219, 254, 0.6)',
+};
+
+const biomedPrimaryCtaStyles: CSSProperties = {
+  '--btn-bg': '#0ea5e9',
+  '--btn-bg-hover': '#0284c7',
+  '--btn-fg': '#f8fafc',
+  '--btn-fg-hover': '#ffffff',
+  '--btn-shadow-rest': '0 16px 34px rgba(14, 165, 233, 0.32)',
+  '--btn-shadow-hover': '0 22px 42px rgba(8, 145, 178, 0.4)',
+};
 
 const Biomedica = () => {
   const [isCardsVisible, setIsCardsVisible] = useState(false);
@@ -67,7 +116,7 @@ const Biomedica = () => {
             Tecnologías sanitarias fundamentales para sistemas de salud operativos. 
             Especialistas en dispositivos médicos para prevención, diagnóstico, tratamiento y rehabilitación.
           </p>
-          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-trust-blue">
+          <Button size="lg" style={biomedHeroButtonStyles} className="px-8 text-lg">
             Solicitar Consulta Técnica
           </Button>
         </div>
@@ -235,6 +284,11 @@ const Biomedica = () => {
         </div>
       </section>
 
+      <ServiceCarousel
+        images={biomedCarouselImages}
+        ariaLabel="Galería de ingeniería biomédica"
+      />
+
       {/* CTA Final */}
       <section className="bg-primary py-16 px-6">
         <div className="max-w-4xl mx-auto text-center">
@@ -244,11 +298,11 @@ const Biomedica = () => {
           <p className="text-xl text-primary-foreground mb-8 opacity-90">
             Contamos con la experiencia y certificaciones necesarias para garantizar el óptimo funcionamiento de sus equipos médicos
           </p>
-          <div className="space-x-4">
-            <Button variant="outline" size="lg" className="bg-white text-primary hover:bg-gray-100">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Button variant="secondary" size="lg" style={biomedSecondaryCtaStyles}>
               Ver Casos de Estudio
             </Button>
-            <Button variant="outline" size="lg" className="bg-accent text-accent-foreground hover:bg-trust-blue">
+            <Button variant="default" size="lg" style={biomedPrimaryCtaStyles}>
               Solicitar Cotización
             </Button>
           </div>
@@ -256,17 +310,7 @@ const Biomedica = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-foreground text-background py-8 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <h4 className="text-xl font-bold mb-2">BVS Lab - Ingeniería Biomédica</h4>
-          <p className="text-muted-foreground mb-4">
-            Especialistas en tecnologías sanitarias • Mantenimiento • Diseño • Manufactura • Asesorías • Ventas
-          </p>
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} BVS Lab. Ingeniería para todos. Todos los derechos reservados.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
