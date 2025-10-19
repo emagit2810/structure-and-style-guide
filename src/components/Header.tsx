@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Phone, Mail, MapPin } from 'lucide-react';
 import logoImg from '@/assets/Nuevo Enzo.png';
@@ -118,7 +118,7 @@ const Header = () => {
                                                 {item.label === 'Automatización' && 'Implementación de sistemas automáticos para optimizar procesos industriales.'}
                                                 {item.label === 'Biomédica' && 'Tecnología avanzada para el sector salud y equipos médicos.'}
                                                 {item.label === 'Mecanizado' && 'Servicios de manufactura y mecanizado de alta precisión.'}
-                                                {item.label === 'equipos ' &&'tienda de productos.'}
+                                                {item.label === 'Equipos' && 'Tienda de productos especializados.'}
                                             </span>
                                         </Link>
                                     ) : (
@@ -154,8 +154,18 @@ const Header = () => {
         { label: 'Servicios', href: '#services' },
         { label: 'Equipos', href: '/equipos' },
         { label: 'Nosotros', href: '#about' },
-        { label: 'Blog', href: '#blog' },
+        { label: 'Blog', href: '/blog' },
     ];
+
+    const headerContactButtonStyles: CSSProperties = {
+        '--btn-bg': 'rgba(255, 255, 255, 0.92)',
+        '--btn-bg-hover': 'rgba(224, 242, 254, 0.98)',
+        '--btn-fg': '#0f172a',
+        '--btn-fg-hover': '#0f172a',
+        '--btn-shadow-rest': '0 10px 24px rgba(15, 23, 42, 0.18)',
+        '--btn-shadow-hover': '0 14px 28px rgba(15, 23, 42, 0.22)',
+        '--btn-secondary-border': 'rgba(148, 163, 184, 0.5)',
+    };
 
     return (
         <header
@@ -195,7 +205,7 @@ const Header = () => {
                                         { label: 'Agrónica', href: '/agro' },
                                         { label: 'Automatización', href: '/auto' },
                                         { label: 'Biomédica', href: '/bio' },
-                                        { label: 'Mecanizado', href: '#mecanizado' },
+                                        { label: 'Mecanizado', href: '/meca' },
                                         { label: 'Equipos', href: '/equipos' },
                                     ]}
                                 />
@@ -218,10 +228,10 @@ const Header = () => {
                         onMouseLeave={handleMouseLeave}
                     >
                         <a href="https://wa.me/573134627810" target="_blank" rel="noreferrer">
-                        <Button variant="outline" size="sm" className=" bg-white/90 hover:bg-secondary "  >
-                            <Phone className="w-4 h-4 mr-2" />
-                            Contacto
-                        </Button> 
+                            <Button variant="secondary" size="sm" style={headerContactButtonStyles}>
+                                <Phone className="w-4 h-4 mr-2" />
+                                Contacto
+                            </Button>
                         </a>
                         <a 
                             href="https://wa.me/573134627810"

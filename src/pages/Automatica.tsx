@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import ServiceCarousel from "@/components/ServiceCarousel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +14,53 @@ const diagnosticCards = [
   { icon: Settings, title: 'Mantenimiento', desc: 'Predictivo', delay: 'delay-350', extraTitle: 'VER PLANES', extraDesc: 'Sistemas de mantenimiento predictivo para maquinaria industrial.' },
   { icon: Zap, title: 'Control', desc: 'Automatización total', delay: 'delay-[550ms]', extraTitle: 'CONOCER MÁS', extraDesc: 'Sistemas de control y supervisión SCADA avanzados.' }
 ];
+
+const automationCarouselImages = [
+  {
+    src: 'https://images.unsplash.com/photo-1581091870622-7c61a1a2fe6a?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Brazos robóticos ensamblando componentes industriales',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Panel de control con monitoreo SCADA en planta industrial',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Operador supervisando tableros electrónicos en sala de control',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Ingeniera revisando robot colaborativo en línea de producción',
+  },
+];
+
+const automationHeroButtonStyles: CSSProperties = {
+  '--btn-bg': '#facc15',
+  '--btn-bg-hover': '#fbbf24',
+  '--btn-fg': '#1f2937',
+  '--btn-fg-hover': '#111827',
+  '--btn-shadow-rest': '0 16px 32px rgba(234, 179, 8, 0.28)',
+  '--btn-shadow-hover': '0 20px 40px rgba(217, 119, 6, 0.35)',
+};
+
+const automationSecondaryCtaStyles: CSSProperties = {
+  '--btn-bg': 'rgba(255, 255, 255, 0.95)',
+  '--btn-bg-hover': 'rgba(255, 250, 235, 0.98)',
+  '--btn-fg': '#92400e',
+  '--btn-fg-hover': '#7c2d12',
+  '--btn-shadow-rest': '0 14px 30px rgba(234, 179, 8, 0.22)',
+  '--btn-shadow-hover': '0 18px 36px rgba(180, 83, 9, 0.28)',
+  '--btn-secondary-border': 'rgba(250, 204, 21, 0.55)',
+};
+
+const automationPrimaryCtaStyles: CSSProperties = {
+  '--btn-bg': '#ea580c',
+  '--btn-bg-hover': '#c2410c',
+  '--btn-fg': '#f8fafc',
+  '--btn-fg-hover': '#ffffff',
+  '--btn-shadow-rest': '0 16px 34px rgba(234, 88, 12, 0.34)',
+  '--btn-shadow-hover': '0 22px 42px rgba(194, 65, 12, 0.42)',
+};
 
 const Automatica = () => {
   const [isCardsVisible, setIsCardsVisible] = useState(false);
@@ -65,7 +114,7 @@ const Automatica = () => {
             Tecnologías de automatización fundamentales para sistemas industriales eficientes. 
             Especialistas en herramientas mecánicas y control de procesos automatizados.
           </p>
-          <Button size="lg" className="bg-yellow-500 text-black hover:bg-yellow-400 font-semibold">
+          <Button size="lg" style={automationHeroButtonStyles} className="px-8 text-lg">
             Solicitar Consulta Técnica
           </Button>
         </div>
@@ -233,6 +282,11 @@ const Automatica = () => {
         </div>
       </section>
 
+      <ServiceCarousel
+        images={automationCarouselImages}
+        ariaLabel="Galería de automatización industrial"
+      />
+
       {/* CTA Final */}
       <section className="bg-yellow-500 py-16 px-6">
         <div className="max-w-4xl mx-auto text-center">
@@ -242,11 +296,11 @@ const Automatica = () => {
           <p className="text-xl text-gray-800 mb-8 opacity-90">
             Contamos con la experiencia y certificaciones necesarias para garantizar el óptimo funcionamiento de sus sistemas automatizados
           </p>
-          <div className="space-x-4">
-            <Button variant="outline" size="lg" className="bg-white text-black hover:bg-gray-100 border-gray-300">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Button variant="secondary" size="lg" style={automationSecondaryCtaStyles}>
               Ver Casos de Estudio
             </Button>
-            <Button size="lg" className="bg-orange-500 text-white hover:bg-orange-600">
+            <Button variant="default" size="lg" style={automationPrimaryCtaStyles}>
               Solicitar Cotización
             </Button>
           </div>
@@ -254,17 +308,7 @@ const Automatica = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <h4 className="text-xl font-bold mb-2">AUTOTECH - Automatización Industrial</h4>
-          <p className="text-gray-300 mb-4">
-            Especialistas en automatización • Mantenimiento • Diseño • Implementación • Monitoreo • Optimización
-          </p>
-          <p className="text-sm text-gray-400">
-            © {new Date().getFullYear()} AUTOTECH. Automatización para todos. Todos los derechos reservados.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

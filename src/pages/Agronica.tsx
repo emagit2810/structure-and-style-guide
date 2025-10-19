@@ -1,12 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Leaf, Tractor, Settings, Wrench, Clock, Award, ShieldCheck, Sprout, Combine, Factory, Microscope, Briefcase, Bot } from "lucide-react";
 import Header from "@/components/Header";
-
-// Ruta corregida para el logo
-import AgronicaLogo from '../assets/Nuevo Enzo.png';
+import Footer from "@/components/Footer";
+import ServiceCarousel from "@/components/ServiceCarousel";
 
 interface InfoCardProps {
   icon: React.ElementType;
@@ -37,6 +36,53 @@ const servicesData: ServiceCardProps[] = [
   { icon: Combine, title: 'Ventas de Equipo', desc: 'Maquinaria y drones de última generación.' },
   { icon: ShieldCheck, title: 'Certificación', desc: 'Cumplimiento de normas de agricultura sostenible.' }
 ];
+
+const agronicaCarouselImages = [
+  {
+    src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Dron inspeccionando un cultivo de precisión al atardecer',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1468824357306-a439d58ccb1c?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Operario ajustando sensores en invernadero inteligente',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Tractor autónomo trabajando en campo con líneas rectas de cultivo',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=1600&auto=format&fit=crop',
+    alt: 'Laboratorio agrícola analizando muestras de suelo y hojas',
+  },
+];
+
+const agronicaHeroButtonStyles: CSSProperties = {
+  '--btn-bg': '#15803d',
+  '--btn-bg-hover': '#166534',
+  '--btn-fg': '#f8fafc',
+  '--btn-fg-hover': '#ffffff',
+  '--btn-shadow-rest': '0 16px 32px rgba(22, 101, 52, 0.32)',
+  '--btn-shadow-hover': '0 20px 40px rgba(21, 128, 61, 0.4)',
+};
+
+const agronicaSecondaryCtaStyles: CSSProperties = {
+  '--btn-bg': 'rgba(255, 255, 255, 0.92)',
+  '--btn-bg-hover': 'rgba(226, 239, 218, 0.98)',
+  '--btn-fg': '#14532d',
+  '--btn-fg-hover': '#166534',
+  '--btn-shadow-rest': '0 14px 30px rgba(22, 101, 52, 0.18)',
+  '--btn-shadow-hover': '0 18px 36px rgba(21, 128, 61, 0.26)',
+  '--btn-secondary-border': 'rgba(134, 239, 172, 0.55)',
+};
+
+const agronicaPrimaryCtaStyles: CSSProperties = {
+  '--btn-bg': '#15803d',
+  '--btn-bg-hover': '#166534',
+  '--btn-fg': '#f8fafc',
+  '--btn-fg-hover': '#ffffff',
+  '--btn-shadow-rest': '0 16px 32px rgba(22, 101, 52, 0.32)',
+  '--btn-shadow-hover': '0 22px 40px rgba(21, 128, 61, 0.42)',
+};
 
 const Agronica = () => {
   const [isCardsVisible, setIsCardsVisible] = useState(false);
@@ -86,7 +132,7 @@ const Agronica = () => {
             <p className="text-xl text-green-100 mb-8 max-w-4xl mx-auto">
               Tecnologías para potenciar la agricultura con innovación mecánica y sostenibilidad.
             </p>
-            <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white text-lg px-8 py-6">
+            <Button size="lg" style={agronicaHeroButtonStyles} className="px-8 text-lg">
               Solicitar Consulta Técnica
             </Button>
           </div>
@@ -228,7 +274,13 @@ const Agronica = () => {
             </div>
           </div>
         </section>
-        
+
+        <ServiceCarousel
+          images={agronicaCarouselImages}
+          ariaLabel="Galería de soluciones agrónicas de precisión"
+          className="bg-white"
+        />
+
         {/* CTA SECTION */}
         <section className="bg-gradient-to-r from-green-600 to-green-700 py-16 px-6">
             <div className="container mx-auto text-center">
@@ -238,11 +290,11 @@ const Agronica = () => {
                 <p className="text-xl text-green-100 mb-8">
                     Contamos con la experiencia y la tecnología para llevar su operación al siguiente nivel.
                 </p>
-                <div className="space-x-4">
-                    <Button variant="secondary" size="lg" className="bg-white text-green-700 hover:bg-green-50">
+                <div className="flex flex-wrap items-center justify-center gap-4">
+                    <Button variant="secondary" size="lg" style={agronicaSecondaryCtaStyles}>
                         Ver Casos de Éxito
                     </Button>
-                    <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-green-700">
+                    <Button variant="default" size="lg" style={agronicaPrimaryCtaStyles}>
                         Solicitar Cotización
                     </Button>
                 </div>
@@ -251,20 +303,7 @@ const Agronica = () => {
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-green-800 text-white py-8 px-6">
-        <div className="container mx-auto text-center">
-          <div className="flex justify-center items-center gap-3 mb-4">
-            <img src={AgronicaLogo} alt="Logo Agrónica Lab" className="h-8 w-8" />
-            <h4 className="text-xl font-bold">Agrónica Lab</h4>
-          </div>
-          <p className="text-green-100 mb-4 max-w-2xl mx-auto">
-            Innovación y mecánica para una agricultura sostenible y eficiente.
-          </p>
-          <p className="text-sm text-green-200">
-            © {new Date().getFullYear()} Agrónica Lab. Todos los derechos reservados.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type CSSProperties } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Award, Clock, Shield } from 'lucide-react';
 
 // --- IMÁGENES DEL CARRUSEL ---
 import heroImage from '@/assets/hero-technician.jpg';
 import agronicaImage from '@/assets/agronamica-redim.jpg';    
-import mecanizadosImage from '@/assets/automatica_redim.jpg'; 
-import automatizacionImage from '@/assets/mecanizado-redim.jpg'; 
+import mecanizadosImage from '@/assets/automatica_redim.jpg';
+import automatizacionImage from '@/assets/mecanizado-redim.jpg';
 import whatsappLogo from '@/assets/logoWhatsappTra.png';
 
 const carouselItems = [
@@ -15,6 +15,16 @@ const carouselItems = [
   { text: "Mecanizados", colorClass: "text-amber-700", image: mecanizadosImage }, // Usando un tono ámbar para "marrón"
   { text: "Automatización", colorClass: "text-yellow-500", image: automatizacionImage }
 ];
+
+const heroSecondaryButtonStyles: CSSProperties = {
+  '--btn-bg': 'rgba(255, 255, 255, 0.92)',
+  '--btn-bg-hover': 'rgba(224, 242, 254, 0.98)',
+  '--btn-fg': '#0f172a',
+  '--btn-fg-hover': '#0f172a',
+  '--btn-shadow-rest': '0 14px 30px rgba(15, 23, 42, 0.18)',
+  '--btn-shadow-hover': '0 18px 36px rgba(15, 23, 42, 0.26)',
+  '--btn-secondary-border': 'rgba(148, 163, 184, 0.45)',
+};
 
 const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -79,11 +89,11 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <Button variant="hero" size="lg" className="text-lg px-8 py-4">
+            <Button variant="hero" size="lg" className="text-lg px-8">
               Solicitar Cotización
               <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-4 bg-white/90 hover:bg-secondary   ">
+            <Button variant="secondary" size="lg" className="text-lg px-8" style={heroSecondaryButtonStyles}>
               Conocer Servicios
             </Button>
           </div>
@@ -116,15 +126,15 @@ const HeroSection = () => {
       </div>
 
       {/* Floating Elements */}
-      <div className="fixed bottom-8 right-8 hidden lg:block z-50">
+      <div className="fixed bottom-[7.5rem] right-8 hidden lg:block z-50">
         <a
           href="https://wa.me/573134627810"
           target="_blank"
           rel="noreferrer"
-          className="block w-12 h-12 rounded-full overflow-hidden shadow-lg transition-transform duration-200 transform hover:scale-110"
-          aria-label="Contactar por Whatsapp"
+          className="whatsapp-fab"
+          aria-label="Abrir WhatsApp"
         >
-          <img src={whatsappLogo} alt="Whatsapp" className="w-full h-full object-cover object-center" />
+          <img src={whatsappLogo} alt="Whatsapp" className="w-9 h-9" />
         </a>
       </div>
     </section>
