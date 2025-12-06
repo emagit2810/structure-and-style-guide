@@ -4,7 +4,13 @@ import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Plus, Minus, Trash2, Eye, Zap, Cog, Microscope, MessageCircle } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, Eye, Zap, Cog, Microscope, MessageCircle, Wrench } from "lucide-react";
+
+// Imágenes de Ferretería
+import arandelasDentadas from '@/assets/tienda/ferreteria/arandelas-dentadas.jpg';
+import tornilloLargo from '@/assets/tienda/ferreteria/tornillo-largo.jpg';
+import tornilloMediano from '@/assets/tienda/ferreteria/tornillo-mediano.jpg';
+import tornilloHexagonal from '@/assets/tienda/ferreteria/tornillo-hexagonal.jpg';
 
 interface Product {
   id: number;
@@ -20,31 +26,38 @@ interface CartItem extends Product {
 }
 
 const products: Product[] = [
+  // Ferretería
+  { id: 14, name: "Arandelas Dentadas", category: "ferreteria", price: 2500, image: arandelasDentadas, description: "Arandelas dentadas de alta calidad para fijación segura" },
+  { id: 15, name: "Tornillo Largo Phillips", category: "ferreteria", price: 1800, image: tornilloLargo, description: "Tornillo de cabeza Phillips para montajes industriales" },
+  { id: 16, name: "Tornillo Mediano Phillips", category: "ferreteria", price: 1200, image: tornilloMediano, description: "Tornillo versátil para uso general" },
+  { id: 17, name: "Tornillo Cabeza Hexagonal Allen", category: "ferreteria", price: 3500, image: tornilloHexagonal, description: "Tornillo de acero inoxidable con cabeza hexagonal" },
+
   // Mechanized
-  { id: 1, name: "Montura Mecánica de Precisión", category: "mechanized", price: 250000, image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3", description: "Montura ajustable para equipos ópticos" },
-  { id: 2, name: "Engranajes de Alta Precisión", category: "mechanized", price: 180000, image: "https://images.unsplash.com/photo-1542376770-6b9a3b176b63?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=3b9c3f2f3e7f4b1ad8e2d6b9a1c2b3d4", description: "Engranajes para sistemas láser" },
-  { id: 3, name: "Brazo Articulado Mecánico", category: "mechanized", price: 320000, image: "https://images.unsplash.com/photo-1581094644950-6f5d1b1f1c6f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=9c3e4d2a6b7e1d8f2c4b5a6d7e8f9a0b", description: "Brazo para posicionamiento de equipos" },
+  { id: 1, name: "Montura Mecánica de Precisión", category: "mechanized", price: 250000, image: "https://source.unsplash.com/featured/1200x800?optical,mount,mechanical,precision", description: "Montura ajustable para equipos ópticos" },
+  { id: 2, name: "Engranajes de Alta Precisión", category: "mechanized", price: 180000, image: "https://source.unsplash.com/featured/1200x800?gears,precision,mechanical", description: "Engranajes para sistemas láser" },
+  { id: 3, name: "Brazo Articulado Mecánico", category: "mechanized", price: 320000, image: "https://source.unsplash.com/featured/1200x800?robotic,arm,mechanical,articulated", description: "Brazo para posicionamiento de equipos" },
 
   // Electronic
-  { id: 4, name: "Controlador Electrónico Láser", category: "electronic", price: 450000, image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=a1b2c3d4e5f67890123456789abcdef0", description: "Controlador para diodos láser" },
-  { id: 5, name: "Fuente de Alimentación Estabilizada", category: "electronic", price: 280000, image: "https://images.unsplash.com/photo-1605902711622-cfb43c44367e?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=4a5b6c7d8e9f0123456789abcdef0123", description: "Fuente para equipos médicos" },
-  { id: 6, name: "Módulo de Control Rayos X", category: "electronic", price: 550000, image: "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=abcdef1234567890abcdef1234567890", description: "Controlador para máquinas de rayos X" },
+  { id: 4, name: "Controlador Electrónico Láser", category: "electronic", price: 450000, image: "https://source.unsplash.com/featured/1200x800?laser,controller,electronics,circuit", description: "Controlador para diodos láser" },
+  { id: 5, name: "Fuente de Alimentación Estabilizada", category: "electronic", price: 280000, image: "https://source.unsplash.com/featured/1200x800?power,supply,electronics,bench", description: "Fuente para equipos médicos" },
+  { id: 6, name: "Módulo de Control Rayos X", category: "electronic", price: 550000, image: "https://source.unsplash.com/featured/1200x800?x-ray,control,electronics,medical", description: "Controlador para máquinas de rayos X" },
 
   // Optics
-  { id: 7, name: "Lentes Ópticas de Precisión", category: "optics", price: 150000, image: "https://images.unsplash.com/photo-1541534401786-5c6c6dcc0b7e?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=11223344556677889900aabbccddeeff", description: "Lentes para microscopios y equipos" },
-  { id: 8, name: "Espejos Reflectantes Láser", category: "optics", price: 200000, image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=33445566778899aabbccddeeff001122", description: "Espejos para sistemas láser" },
-  { id: 9, name: "Prismas Ópticos", category: "optics", price: 120000, image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3", description: "Prismas para equipos ópticos" },
+  { id: 7, name: "Lentes Ópticas de Precisión", category: "optics", price: 150000, image: "https://source.unsplash.com/featured/1200x800?optical,lens,glass", description: "Lentes para microscopios y equipos" },
+  { id: 8, name: "Espejos Reflectantes Láser", category: "optics", price: 200000, image: "https://source.unsplash.com/featured/1200x800?laser,mirror,optics", description: "Espejos para sistemas láser" },
+  { id: 9, name: "Prismas Ópticos", category: "optics", price: 120000, image: "https://source.unsplash.com/featured/1200x800?optical,prism,dispersion", description: "Prismas para equipos ópticos" },
 
   // Aesthetics (additional)
-  { id: 10, name: "Láser de Depilación", category: "aesthetics", price: 1200000, image: "https://images.unsplash.com/photo-1536305030012-6a1f4b6a5d2b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=66778899aabbccddeeff001122334455", description: "Equipo láser para estética" },
-  { id: 11, name: "Máquina de Radiofrecuencia", category: "aesthetics", price: 800000, image: "https://images.unsplash.com/photo-1582719478147-5f5f5f5f5f5f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=77889900aabbccddeeff001122334455", description: "Equipo de radiofrecuencia estética" },
+  { id: 10, name: "Láser de Depilación", category: "aesthetics", price: 1200000, image: "https://source.unsplash.com/featured/1200x800?laser,hair,removal,clinic", description: "Equipo láser para estética" },
+  { id: 11, name: "Máquina de Radiofrecuencia", category: "aesthetics", price: 800000, image: "https://source.unsplash.com/featured/1200x800?radiofrequency,skin,clinic", description: "Equipo de radiofrecuencia estética" },
 
   // Ray Machines (additional)
-  { id: 12, name: "Generador de Rayos X", category: "ray-machines", price: 2500000, image: "https://images.unsplash.com/photo-1582719478147-8a8a8a8a8a8a?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=889900aabbccddeeff00112233445566", description: "Generador para equipos de rayos X" },
-  { id: 13, name: "Detector de Rayos X", category: "ray-machines", price: 900000, image: "https://images.unsplash.com/photo-1582719478147-9b9b9b9b9b9b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=9900aabbccddeeff0011223344556677", description: "Detector digital para rayos X" },
+  { id: 12, name: "Generador de Rayos X", category: "ray-machines", price: 2500000, image: "https://source.unsplash.com/featured/1200x800?x-ray,generator,medical,equipment", description: "Generador para equipos de rayos X" },
+  { id: 13, name: "Detector de Rayos X", category: "ray-machines", price: 900000, image: "https://source.unsplash.com/featured/1200x800?x-ray,detector,flat,panel", description: "Detector digital para rayos X" }
 ];
 
 const categories = [
+  { key: 'ferreteria', label: 'Ferretería', icon: Wrench },
   { key: 'all', label: 'Todos', icon: Eye },
   { key: 'mechanized', label: 'Mecánicos', icon: Cog },
   { key: 'electronic', label: 'Electrónicos', icon: Zap },
@@ -55,7 +68,7 @@ const categories = [
 
 const Equipos = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('ferreteria');
 
   const filteredProducts = selectedCategory === 'all' ? products : products.filter(p => p.category === selectedCategory);
 
@@ -72,11 +85,11 @@ const Equipos = () => {
   // Abre WhatsApp con un mensaje prellenado sobre el producto
   const enviarWhatsApp = (product: Product, numeroWhatsApp = "573134627810") => {
     const mensaje = `🛒 *Solicitud de Información*\n\n` +
-                    `📦 *Producto:* ${product.name}\n` +
-                    `💰 *Precio:* $${product.price.toLocaleString()}\n` +
-                    `🏷️ *Categoría:* ${product.category}\n` +
-                    `📝 *Descripción:* ${product.description}\n\n` +
-                    `Me interesa este producto. ¿Podrían darme más información?`;
+      `📦 *Producto:* ${product.name}\n` +
+      `💰 *Precio:* $${product.price.toLocaleString()}\n` +
+      `🏷️ *Categoría:* ${product.category}\n` +
+      `📝 *Descripción:* ${product.description}\n\n` +
+      `Me interesa este producto. ¿Podrían darme más información?`;
 
     const mensajeCodificado = encodeURIComponent(mensaje);
     const url = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
@@ -108,7 +121,7 @@ const Equipos = () => {
             Tienda de Equipos <span className="text-blue-200">Ópticos y Médicos</span>
           </h1>
           <p className="text-xl text-blue-100 mb-8 max-w-4xl mx-auto">
-            Productos especializados en óptica, estética, láseres y máquinas de rayos. 
+            Productos especializados en óptica, estética, láseres y máquinas de rayos.
             Tecnología de vanguardia para profesionales de la salud y la ciencia.
           </p>
           <Button size="lg" className="bg-blue-500 hover:bg-blue-400 text-white">
@@ -163,11 +176,23 @@ const Equipos = () => {
                   <CardDescription className="text-blue-600 mb-4">{product.description}</CardDescription>
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-blue-700">${product.price.toLocaleString()}</span>
-                    <Button onClick={() => { addToCart(product); enviarWhatsApp(product); }} className="bg-blue-600 hover:bg-blue-500 text-white flex items-center">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Agregar
-                      <MessageCircle className="w-4 h-4 ml-2" />
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        onClick={() => addToCart(product)}
+                        className="bg-blue-600 hover:bg-blue-500 text-white flex items-center"
+                      >
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Agregar
+                      </Button>
+                      <Button
+                        onClick={() => enviarWhatsApp(product)}
+                        variant="outline"
+                        className="border-blue-300 text-blue-700 hover:bg-blue-100 flex items-center"
+                      >
+                        <MessageCircle className="w-4 h-4 mr-2" />
+                        Consultar
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

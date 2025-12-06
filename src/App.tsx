@@ -11,6 +11,8 @@ import Agronica from "./pages/Agronica";
 import Automatica from "./pages/Automatica";
 import Equipos from "./pages/Equipos";
 import Mecanizados from "./pages/Mecanizados";
+import Consulta from "./pages/Consulta";
+import Nosotros from "./pages/Nosotros";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -31,6 +33,8 @@ const App = () => {
             <Route path="/auto" element={<Automatica />} />
             <Route path="/equipos" element={<Equipos />} />
             <Route path="/meca" element={<Mecanizados />} />
+            <Route path="/chat" element={<Consulta />} />
+            <Route path="/Nos" element={<Nosotros />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

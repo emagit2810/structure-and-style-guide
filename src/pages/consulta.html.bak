@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Research Agent | Agente de Investigación Profunda</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        code, .mono { font-family: 'JetBrains Mono', monospace; }
+        body { background: linear-gradient(135deg, #0a0f1a 0%, #0d1526 50%, #0f1a2e 100%); min-height: 100vh; }
+        
+        /* UI Animations & Effects */
+        .bg-particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; pointer-events: none; }
+        .particle { position: absolute; width: 4px; height: 4px; background: rgba(59, 130, 246, 0.3); border-radius: 50%; animation: float 20s infinite ease-in-out; }
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+        .glow-orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.15; animation: pulse-glow 8s infinite ease-in-out; }
+        .orb-1 { width: 400px; height: 400px; background: #3b82f6; top: -100px; right: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: #06b6d4; bottom: -50px; left: -50px; animation-delay: 4s; }
+        .orb-3 { width: 200px; height: 200px; background: #8b5cf6; top: 50%; left: 50%; animation-delay: 2s; }
+        @keyframes pulse-glow { 0%, 100% { opacity: 0.1; transform: scale(1); } 50% { opacity: 0.2; transform: scale(1.1); } }
+        
+        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 0 0 40px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+        
+        /* Sidebar */
+        .sidebar { background: rgba(10, 15, 26, 0.95); backdrop-filter: blur(20px); border-right: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 4px 0 30px rgba(0, 0, 0, 0.3); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s; }
+        .sidebar.collapsed { transform: translateX(-100%); }
+        .sidebar-toggle { position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 60; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); backdrop-filter: blur(10px); transition: all 0.3s; }
+        .sidebar-toggle:hover { background: rgba(59, 130, 246, 0.4); box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+        .sidebar-toggle.open { left: 320px; }
+        
+        .library-item { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(59, 130, 246, 0.15); transition: all 0.3s; cursor: pointer; }
+        .library-item:hover { background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.4); transform: translateX(4px); }
+        .library-item.selected { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
+        
+        .sidebar-scroll { scrollbar-width: thin; scrollbar-color: rgba(59, 130, 246, 0.3) transparent; }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 2px; }
+
+        /* Mode Buttons */
+        .mode-btn { position: relative; background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+        .mode-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.2), transparent); transition: left 0.5s; }
+        .mode-btn:hover::before { left: 100%; }
+        .mode-btn:hover { border-color: rgba(59, 130, 246, 0.6); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2); }
+        .mode-btn.active { background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(6, 182, 212, 0.2)); border-color: #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), inset 0 0 20px rgba(59, 130, 246, 0.1); }
+        .mode-indicator { width: 8px; height: 8px; border-radius: 50%; background: rgba(100, 116, 139, 0.5); transition: all 0.3s; }
+        .mode-btn.active .mode-indicator { background: #3b82f6; box-shadow: 0 0 15px #3b82f6; }
+
+        /* Chat */
+        .chat-container { height: 400px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(59, 130, 246, 0.3) transparent; }
+        .message-user { background: linear-gradient(135deg, #3b82f6, #2563eb); border-radius: 20px 20px 4px 20px; animation: slideInRight 0.3s ease-out; }
+        .message-agent { background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 20px 20px 20px 4px; animation: slideInLeft 0.3s ease-out; }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+
+        .input-container { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(59, 130, 246, 0.3); transition: all 0.3s; }
+        .input-container:focus-within { border-color: #3b82f6; box-shadow: 0 0 30px rgba(59, 130, 246, 0.2); }
+        .input-field { background: transparent; outline: none; }
+        .send-btn { background: linear-gradient(135deg, #3b82f6, #2563eb); transition: all 0.3s; }
+        .send-btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(59, 130, 246, 0.5); }
+        .send-btn:active { transform: scale(0.95); }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .typing-dot { width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; animation: typingBounce 1.4s infinite ease-in-out; }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce { 0%, 80%, 100% { transform: translateY(0); opacity: 0.3; } 40% { transform: translateY(-8px); opacity: 1; } }
+
+        .status-badge { animation: statusPulse 2s infinite; }
+        @keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .icon-spin { animation: spin 2s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .tool-badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 9999px; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; }
+        .mode-badge-rag { background: rgba(99, 102, 241, 0.2); border-color: rgba(99, 102, 241, 0.4); color: #a5b4fc; }
+        .mode-badge-internet { background: rgba(6, 182, 212, 0.2); border-color: rgba(6, 182, 212, 0.4); color: #67e8f9; }
+        .mode-badge-llm { background: rgba(139, 92, 246, 0.2); border-color: rgba(139, 92, 246, 0.4); color: #c4b5fd; }
+        .mode-badge-both { background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); color: #6ee7b7; }
+
+        .search-input { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(59, 130, 246, 0.2); transition: all 0.3s; }
+        .search-input:focus { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); outline: none; }
+        .action-btn { transition: all 0.2s; }
+        .action-btn:hover { transform: scale(1.1); }
+        .float-animation { animation: floatIcon 3s ease-in-out infinite; }
+        @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .toast { animation: slideInToast 0.3s ease-out; }
+        @keyframes slideInToast { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .modal-backdrop { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); }
+        .modal-content { animation: modalIn 0.3s ease-out; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        /* Markdown styles simplified */
+        .prose h3 { color: #fff; font-size: 1.1em; font-weight: 600; margin-top: 1em; }
+        .prose h4 { color: #93c5fd; font-size: 1em; font-weight: 500; margin-top: 0.8em; }
+        .prose p { margin-bottom: 0.5em; line-height: 1.6; }
+        .prose code { color: #67e8f9; background: rgba(30, 41, 59, 0.8); padding: 2px 4px; border-radius: 4px; font-size: 0.9em; }
+        .prose pre { background: rgba(15, 23, 42, 0.8); padding: 1em; border-radius: 8px; overflow-x: auto; margin: 1em 0; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 0.5em; }
+        .prose a { color: #60a5fa; text-decoration: underline; }
+    </style>
+</head>
+<body class="text-white overflow-x-hidden">
+    <!-- Animated Background -->
+    <div class="bg-particles" id="particles"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <!-- Sidebar Toggle Button -->
+    <button id="sidebarToggle" onclick="toggleSidebar()" class="sidebar-toggle open p-2 rounded-r-lg text-blue-400 hover:text-white z-50">
+        <svg id="toggleIcon" class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+        </svg>
+    </button>
+
+    <!-- Sidebar - Library/Repository -->
+    <aside id="sidebar" class="sidebar fixed left-0 top-0 h-full w-80 z-40 flex flex-col">
+        <div class="p-4 border-b border-blue-500/20">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="font-bold text-white">Biblioteca</h2>
+                    <p class="text-xs text-slate-400">Repositorio de respuestas</p>
+                </div>
+            </div>
+            <div class="relative">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" id="librarySearch" class="search-input w-full pl-10 pr-4 py-2 rounded-lg text-sm text-white placeholder-slate-500" placeholder="Buscar en biblioteca..." oninput="filterLibrary()">
+            </div>
+        </div>
+
+        <div class="px-4 py-3 border-b border-blue-500/20 bg-slate-900/30">
+            <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                    <span class="text-slate-400">Total:</span>
+                    <span id="libraryCount" class="text-blue-400 font-semibold">0</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="exportLibrary()" class="action-btn text-slate-400 hover:text-emerald-400" title="Exportar">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                        </svg>
+                    </button>
+                    <button onclick="clearLibrary()" class="action-btn text-slate-400 hover:text-red-400" title="Limpiar todo">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-4 py-2 border-b border-blue-500/20 flex gap-1 overflow-x-auto">
+            <button onclick="filterByMode('all')" class="filter-tab active text-xs px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 whitespace-nowrap" data-filter="all">Todos</button>
+            <button onclick="filterByMode('rag_search')" class="filter-tab text-xs px-3 py-1 rounded-full bg-slate-700/50 text-slate-400 whitespace-nowrap" data-filter="rag_search">📚 RAG</button>
+            <button onclick="filterByMode('internet_search')" class="filter-tab text-xs px-3 py-1 rounded-full bg-slate-700/50 text-slate-400 whitespace-nowrap" data-filter="internet_search">🌐 Web</button>
+            <button onclick="filterByMode('llm_only')" class="filter-tab text-xs px-3 py-1 rounded-full bg-slate-700/50 text-slate-400 whitespace-nowrap" data-filter="llm_only">🤖 LLM</button>
+        </div>
+
+        <div id="libraryContainer" class="flex-1 overflow-y-auto sidebar-scroll p-3 space-y-2">
+            <div id="emptyState" class="flex flex-col items-center justify-center h-full text-center py-8">
+                <div class="w-16 h-16 rounded-full bg-slate-800/50 flex items-center justify-center mb-4 float-animation">
+                    <svg class="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+                    </svg>
+                </div>
+                <h3 class="text-slate-500 font-medium mb-1">Biblioteca vacía</h3>
+                <p class="text-slate-600 text-xs max-w-[200px]">Las respuestas guardadas aparecerán aquí</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Container -->
+    <div id="mainContent" class="relative z-10 min-h-screen flex items-center justify-center p-4 transition-all duration-300" style="margin-left: 320px;">
+        <div class="w-full max-w-4xl">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </div>
+                    <div class="text-left">
+                        <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent">
+                            Deep Research Agent
+                        </h1>
+                        <p class="text-slate-400 text-sm">Agente de Investigación Profunda con IA</p>
+                    </div>
+                </div>
+                
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 status-badge"></span>
+                    <span class="text-sm text-slate-300">FastAPI Backend</span>
+                    <span class="text-slate-500">•</span>
+                    <span class="text-sm text-slate-400 mono" id="currentMode">web_search</span>
+                </div>
+            </div>
+
+            <!-- Main Card -->
+            <div class="glass-card rounded-3xl p-6 md:p-8">
+                <!-- Mode Selection -->
+                <div class="mb-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                        </svg>
+                        <h2 class="text-lg font-semibold text-white">Modo de Herramientas</h2>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <button onclick="selectMode('rag_search', this)" class="mode-btn rounded-xl p-4 text-left group">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="mode-indicator"></div>
+                                <span class="text-xs text-slate-400 mono">1</span>
+                            </div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                                </svg>
+                                <span class="font-medium text-white">RAG Search</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Documentos locales</p>
+                        </button>
+
+                        <button onclick="selectMode('internet_search', this)" class="mode-btn rounded-xl p-4 text-left group active">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="mode-indicator"></div>
+                                <span class="text-xs text-slate-400 mono">2</span>
+                            </div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                                </svg>
+                                <span class="font-medium text-white">Web Search</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Internet en vivo</p>
+                        </button>
+
+                        <button onclick="selectMode('llm_only', this)" class="mode-btn rounded-xl p-4 text-left group">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="mode-indicator"></div>
+                                <span class="text-xs text-slate-400 mono">3</span>
+                            </div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                <span class="font-medium text-white">LLM Only</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Sin herramientas</p>
+                        </button>
+
+                        <button onclick="selectMode('both', this)" class="mode-btn rounded-xl p-4 text-left group">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="mode-indicator"></div>
+                                <span class="text-xs text-slate-400 mono">4</span>
+                            </div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+                                </svg>
+                                <span class="font-medium text-white">Both</span>
+                            </div>
+                            <p class="text-xs text-slate-400">RAG + Web</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Area -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            <h2 class="text-lg font-semibold text-white">Conversación</h2>
+                        </div>
+                        <button onclick="clearChat()" class="text-xs text-slate-500 hover:text-red-400 flex items-center gap-1 transition-colors">
+                            Limpiar chat
+                        </button>
+                    </div>
+
+                    <div id="chatContainer" class="chat-container rounded-2xl bg-slate-900/50 border border-slate-700/50 p-4 mb-4">
+                        <div class="message-agent p-4 max-w-[85%] mb-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                                    </svg>
+                                </div>
+                                <span class="text-sm font-medium text-blue-300">Deep Research Agent</span>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed">
+                                ¡Hola! Conectado al backend FastAPI. Selecciona un modo y escribe tu consulta.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="input-container rounded-2xl flex items-center gap-3 p-2">
+                        <input type="text" id="queryInput" class="input-field flex-1 px-4 py-3 text-white text-sm" placeholder="Escribe tu pregunta de investigación..." onkeypress="handleKeyPress(event)">
+                        <button id="sendBtn" onclick="sendMessage()" class="send-btn p-3 rounded-xl text-white">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-backdrop absolute inset-0" onclick="closePreviewModal()"></div>
+        <div class="modal-content absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl max-h-[80vh] glass-card rounded-2xl overflow-hidden">
+            <div class="flex items-center justify-between p-4 border-b border-blue-500/20">
+                <h3 id="previewTitle" class="font-semibold text-white">Vista previa</h3>
+                <button onclick="closePreviewModal()" class="p-2 text-slate-400 hover:text-white">✕</button>
+            </div>
+            <div id="previewContent" class="p-6 overflow-y-auto max-h-[60vh] sidebar-scroll"></div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
+
+    <script>
+        // Configuración del Backend
+        const API_BASE = window.location.origin; // Asume que se sirve desde el mismo origen.
+        // Si corres esto separado del backend, cambia esto a: const API_BASE = 'http://localhost:8000';
+
+        // Mapeo entre UI y Backend
+        const modeMapping = {
+            'rag_search': 'rag_search',
+            'internet_search': 'web_search', // Source 2 espera 'web_search'
+            'llm_only': 'llm_only',
+            'both': 'both' // Asumiendo que el backend puede manejar 'both' o usará un fallback
+        };
+
+        let currentMode = 'internet_search'; // Valor visual por defecto
+        let library = [];
+        let currentFilter = 'all';
+        let sidebarOpen = true;
+
+        const modeColors = {
+            'rag_search': 'from-blue-500 to-indigo-500',
+            'internet_search': 'from-cyan-500 to-blue-500',
+            'llm_only': 'from-violet-500 to-purple-500',
+            'both': 'from-emerald-500 to-teal-500'
+        };
+
+        const modeDescriptions = {
+            'rag_search': 'Buscando en documentos locales...',
+            'internet_search': 'Buscando en la web...',
+            'llm_only': 'Generando respuesta...',
+            'both': 'Investigando...'
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            loadLibrary();
+            renderLibrary();
+            document.getElementById('queryInput').focus();
+            checkBackendModes();
+        });
+
+        // Verificar modos disponibles del backend (Opcional, pero buena práctica)
+        async function checkBackendModes() {
+            try {
+                await fetch(`${API_BASE}/modes`);
+                console.log("Conectado al backend correctamente.");
+            } catch (e) {
+                console.warn("No se pudo conectar a /modes. Asegúrate de que FastAPI esté corriendo.", e);
+                showToast("Error de conexión con el Backend", "error");
+            }
+        }
+
+        // --- Core Chat Logic ---
+
+        async function sendMessage() {
+            const input = document.getElementById('queryInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const query = input.value.trim();
+            
+            if (!query) return;
+
+            // UI Setup
+            input.value = '';
+            input.disabled = true;
+            sendBtn.disabled = true;
+
+            const chatContainer = document.getElementById('chatContainer');
+            
+            // 1. User Message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'flex justify-end mb-4';
+            userMsg.innerHTML = `<div class="message-user p-4 max-w-[85%]"><p class="text-white text-sm">${escapeHtml(query)}</p></div>`;
+            chatContainer.appendChild(userMsg);
+
+            // 2. Typing Indicator
+            const typingId = 'typing-' + Date.now();
+            const typingIndicator = document.createElement('div');
+            typingIndicator.id = typingId;
+            typingIndicator.className = 'message-agent p-4 max-w-[85%] mb-4';
+            typingIndicator.innerHTML = `
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br ${modeColors[currentMode]} flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white icon-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-blue-300">Procesando...</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+                    <span class="text-slate-500 text-xs ml-2">${modeDescriptions[currentMode]}</span>
+                </div>
+            `;
+            chatContainer.appendChild(typingIndicator);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // 3. API Call
+            try {
+                const apiMode = modeMapping[currentMode] || 'web_search'; // Fallback
+                
+                const response = await fetch(`${API_BASE}/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: query, mode: apiMode })
+                });
+
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                
+                const data = await response.json();
+                
+                // Procesar respuesta
+                let finalContent = data.answer || "Sin respuesta del modelo.";
+                
+                // Si hay contexto/fuentes, añadirlas al final
+                if (data.context) {
+                    finalContent += `\n\n### 🔍 Fuentes / Contexto:\n\`\`\`text\n${data.context}\n\`\`\``;
+                }
+
+                updateChatWithResponse(typingId, finalContent, currentMode, query);
+
+            } catch (error) {
+                console.error(error);
+                const errorDiv = document.getElementById(typingId);
+                if (errorDiv) {
+                    errorDiv.innerHTML = `
+                        <div class="flex items-center gap-2 text-red-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span class="text-sm">Error: ${error.message || 'Error de conexión'}</span>
+                        </div>
+                    `;
+                }
+                showToast('Error al conectar con API', 'error');
+            } finally {
+                input.disabled = false;
+                sendBtn.disabled = false;
+                input.focus();
+            }
+        }
+
+        function updateChatWithResponse(elementId, content, mode, originalQuery) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            element.id = 'response-' + Date.now(); // Remove temporary ID
+            
+            // Format Content logic (convert API text to Markdown-like HTML)
+            const formattedContent = formatMarkdown(content);
+
+            element.innerHTML = `
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br ${modeColors[mode]} flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-blue-300">Deep Research Agent</span>
+                    <span class="tool-badge mode-badge-${mode}">${mode}</span>
+                </div>
+                <div class="text-slate-300 text-sm leading-relaxed prose prose-sm prose-invert max-w-none">
+                    ${formattedContent}
+                </div>
+                <div class="mt-3 pt-3 border-t border-slate-700/50 flex items-center gap-3">
+                    <button onclick="copyResponse(this)" class="text-xs text-slate-500 hover:text-blue-400 flex items-center gap-1 transition-colors">
+                        Copiar
+                    </button>
+                    <button onclick="saveToLibraryWrapper(this, '${escapeHtml(originalQuery)}', '${mode}')" class="text-xs text-slate-500 hover:text-emerald-400 flex items-center gap-1 transition-colors">
+                        Guardar
+                    </button>
+                </div>
+            `;
+            
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Auto-guardar en historial local
+            saveToLibrary(originalQuery, mode, content);
+        }
+
+        // Wrapper to extract content from DOM for manual save button
+        function saveToLibraryWrapper(btn, query, mode) {
+            // Find the raw text content roughly, or use the library state. 
+            // Better to rely on the auto-save, but here's a simple way:
+            showToast('Ya guardado automáticamente', 'info');
+        }
+
+        // --- UI Helper Functions ---
+
+        function selectMode(mode, element) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('currentMode').textContent = modeMapping[mode]; // Show backend mode name
+            element.style.transform = 'scale(0.95)';
+            setTimeout(() => element.style.transform = '', 150);
+        }
+
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        function toggleSidebar() {
+            sidebarOpen = !sidebarOpen;
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            
+            if (sidebarOpen) {
+                sidebar.classList.remove('collapsed');
+                mainContent.style.marginLeft = '320px';
+                toggleBtn.classList.add('open');
+                document.getElementById('toggleIcon').style.transform = 'rotate(0deg)';
+            } else {
+                sidebar.classList.add('collapsed');
+                mainContent.style.marginLeft = '0';
+                toggleBtn.classList.remove('open');
+                document.getElementById('toggleIcon').style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function handleKeyPress(event) { if (event.key === 'Enter') sendMessage(); }
+        
+        function clearChat() {
+            document.getElementById('chatContainer').innerHTML = `<div class="message-agent p-4 max-w-[85%] mb-4"><p class="text-slate-300 text-sm">Chat limpiado.</p></div>`;
+        }
+
+        // --- Library Logic ---
+        function loadLibrary() {
+            const saved = localStorage.getItem('researchLibrary');
+            if (saved) library = JSON.parse(saved);
+        }
+        function saveLibrary() { localStorage.setItem('researchLibrary', JSON.stringify(library)); }
+        
+        function saveToLibrary(query, mode, content) {
+            const item = { id: Date.now(), query, mode, content, timestamp: new Date().toISOString() };
+            library.unshift(item);
+            saveLibrary();
+            renderLibrary();
+        }
+
+        function renderLibrary() {
+            const container = document.getElementById('libraryContainer');
+            const searchTerm = document.getElementById('librarySearch').value.toLowerCase();
+            
+            let filteredItems = library.filter(item => {
+                const matchesFilter = currentFilter === 'all' || item.mode === currentFilter;
+                const matchesSearch = item.query.toLowerCase().includes(searchTerm);
+                return matchesFilter && matchesSearch;
+            });
+
+            document.getElementById('libraryCount').textContent = filteredItems.length;
+
+            if (filteredItems.length === 0) {
+                container.innerHTML = document.getElementById('emptyState').outerHTML;
+                container.querySelector('#emptyState').classList.remove('hidden');
+                return;
+            }
+
+            container.innerHTML = filteredItems.map(item => `
+                <div class="library-item rounded-xl p-3" onclick="previewItem(${item.id})">
+                    <p class="text-sm text-white font-medium truncate">${escapeHtml(item.query)}</p>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="text-[10px] text-blue-300">${item.mode}</span>
+                        <span class="text-[10px] text-slate-500">${new Date(item.timestamp).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterByMode(mode) {
+            currentFilter = mode;
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.className = tab.dataset.filter === mode 
+                    ? 'filter-tab active text-xs px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 whitespace-nowrap'
+                    : 'filter-tab text-xs px-3 py-1 rounded-full bg-slate-700/50 text-slate-400 whitespace-nowrap';
+            });
+            renderLibrary();
+        }
+
+        function filterLibrary() { renderLibrary(); }
+        function clearLibrary() { library = []; saveLibrary(); renderLibrary(); }
+        function exportLibrary() {
+            const data = JSON.stringify(library, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'library.json'; a.click();
+        }
+
+        function previewItem(id) {
+            const item = library.find(i => i.id === id);
+            if (!item) return;
+            document.getElementById('previewTitle').textContent = item.query;
+            document.getElementById('previewContent').innerHTML = `<div class="prose prose-sm prose-invert">${formatMarkdown(item.content)}</div>`;
+            document.getElementById('previewModal').classList.remove('hidden');
+        }
+        function closePreviewModal() { document.getElementById('previewModal').classList.add('hidden'); }
+
+        // --- Utilities ---
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const colorClass = type === 'error' ? 'border-red-500/50 text-red-300 bg-red-900/50' : 'border-blue-500/50 text-blue-300 bg-blue-900/50';
+            toast.className = `toast flex items-center gap-2 px-4 py-3 rounded-xl border ${colorClass} backdrop-blur-lg`;
+            toast.innerHTML = `<span class="text-sm">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatMarkdown(text) {
+            if (!text) return '';
+            return text
+                .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>')
+                .replace(/`([^`]+)`/g, '<code class="mono">$1</code>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')
+                .replace(/### (.*)/g, '<h4 class="text-blue-300 font-medium mt-2">$1</h4>')
+                .replace(/## (.*)/g, '<h3 class="text-white font-semibold mt-3">$1</h3>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function copyResponse(btn) {
+            const text = btn.closest('.message-agent').querySelector('.prose').innerText;
+            navigator.clipboard.writeText(text);
+            showToast('Copiado');
+        }
+    </script>
+</body>
+</html>

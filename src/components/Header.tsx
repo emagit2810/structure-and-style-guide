@@ -8,22 +8,24 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
     const [isPinned, setIsPinned] = useState(false);
-    
-    const headerRef = useRef(null);
-    const navRef = useRef(null);
-    
+
+    const headerRef = useRef<HTMLElement>(null);
+    const navRef = useRef<HTMLElement>(null);
+
     // --- INICIO DE MODIFICACIONES ---
 
     // Usaremos un temporizador para gestionar el hover entre elementos adyacentes
-    const hoverTimeoutRef = useRef(null);
+    const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // Función para activar el hover. Se usará en las "zonas calientes".
     const handleMouseEnter = () => {
         // Si hay un temporizador para cerrar, lo cancelamos.
-        clearTimeout(hoverTimeoutRef.current);
+        if (hoverTimeoutRef.current) {
+            clearTimeout(hoverTimeoutRef.current);
+        }
         setIsHovering(true);
     };
-    
+
     // Función para desactivar el hover con un pequeño retardo.
     const handleMouseLeave = () => {
         // Creamos un temporizador para dar tiempo al usuario a moverse al panel.
@@ -31,14 +33,14 @@ const Header = () => {
             setIsHovering(false);
         }, 100); // 100ms de retardo
     };
-    
+
     // --- FIN DE MODIFICACIONES ---
 
     const isContactPanelVisible = isHovering || isPinned;
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (headerRef.current && !headerRef.current.contains(event.target)) {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
                 if (isPinned) {
                     setIsPinned(false);
                 }
@@ -51,24 +53,24 @@ const Header = () => {
         };
     }, [isPinned]);
 
-    const handleHeaderClick = (e) => {
-        if (navRef.current && navRef.current.contains(e.target)) {
+    const handleHeaderClick = (e: React.MouseEvent) => {
+        if (navRef.current && navRef.current.contains(e.target as Node)) {
             return;
         }
         setIsPinned(prev => !prev);
     }
-    
+
     // El componente DropdownMenu se mantiene intacto para preservar sus animaciones y funcionalidad.
-    const DropdownMenu = ({ label, items }) => {
+    const DropdownMenu = ({ label, items }: { label: string, items: { label: string, href: string }[] }) => {
         const [open, setOpen] = useState(false);
-        const menuRef = useRef(null);
+        const menuRef = useRef<HTMLDivElement>(null);
 
         useEffect(() => {
-            const handleClickOutside = (event) => {
-                if (headerRef.current && headerRef.current.contains(event.target)) {
+            const handleClickOutside = (event: MouseEvent) => {
+                if (headerRef.current && headerRef.current.contains(event.target as Node)) {
                     // Si el clic fue en el header pero fuera de este menú, cerrar.
-                    if (menuRef.current && !menuRef.current.contains(event.target)) {
-                         setOpen(false);
+                    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                        setOpen(false);
                     }
                 } else {
                     // Si el clic fue totalmente fuera del header, cerrar.
@@ -88,7 +90,7 @@ const Header = () => {
                 <button
                     className="flex items-center space-x-1 text-foreground hover:text-primary transition-colors duration-300 font-medium focus:outline-none"
                     onClick={(e) => {
-                        e.stopPropagation(); 
+                        e.stopPropagation();
                         setOpen((prev) => !prev);
                     }}
                     aria-haspopup="true"
@@ -118,7 +120,7 @@ const Header = () => {
                                                 {item.label === 'Automatización' && 'Implementación de sistemas automáticos para optimizar procesos industriales.'}
                                                 {item.label === 'Biomédica' && 'Tecnología avanzada para el sector salud y equipos médicos.'}
                                                 {item.label === 'Mecanizado' && 'Servicios de manufactura y mecanizado de alta precisión.'}
-                                                {item.label === 'equipos ' &&'tienda de productos.'}
+                                                {item.label === 'equipos ' && 'tienda de productos.'}
                                             </span>
                                         </Link>
                                     ) : (
@@ -150,10 +152,10 @@ const Header = () => {
     };
 
     const navItems = [
-        { label: 'Consulta', href: '#consultation' },
+        { label: 'Consulta', href: '/chat' },
         { label: 'Servicios', href: '#services' },
         { label: 'Equipos', href: '/equipos' },
-        { label: 'Nosotros', href: '#about' },
+        { label: 'Nosotros', href: '/Nos' },
         { label: 'Blog', href: '#blog' },
     ];
 
@@ -168,12 +170,12 @@ const Header = () => {
                     onClick={handleHeaderClick}
                 >
                     {/* ZONA CALIENTE 1: LOGO */}
-                    <div 
+                    <div
                         className="flex items-center space-x-2"
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseLeave}
                     >
-                        <Link to="/" className="flex items-center gap-3 no-underline">
+                        <Link to="/Nos" className="flex items-center gap-3 no-underline">
                             <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
                                 <img src={logoImg} alt="bvs lab logo" className="w-10 h-10" />
                             </div>
@@ -212,18 +214,18 @@ const Header = () => {
                     </nav>
 
                     {/* ZONA CALIENTE 2: BOTONES CTA */}
-                    <div 
+                    <div
                         className="hidden md:flex items-center space-x-4"
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseLeave}
                     >
                         <a href="https://wa.me/573134627810" target="_blank" rel="noreferrer">
-                        <Button variant="outline" size="sm" className=" bg-white/90 hover:bg-secondary "  >
-                            <Phone className="w-4 h-4 mr-2" />
-                            Contacto
-                        </Button> 
+                            <Button variant="outline" size="sm" className=" bg-white/90 hover:bg-secondary "  >
+                                <Phone className="w-4 h-4 mr-2" />
+                                Contacto
+                            </Button>
                         </a>
-                        <a 
+                        <a
                             href="https://wa.me/573134627810"
                             target="_blank"
                             rel="noreferrer"
@@ -243,9 +245,9 @@ const Header = () => {
                     </button>
                 </div>
 
-                {isMenuOpen && ( <div className="md:hidden"> {/* ... Menú móvil ... */} </div> )}
+                {isMenuOpen && (<div className="md:hidden"> {/* ... Menú móvil ... */} </div>)}
             </div>
-            
+
             {/* PANEL DE CONTACTO */}
             {isContactPanelVisible && (
                 <div
